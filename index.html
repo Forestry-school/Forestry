@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>🎰 福瑞斯特謝師感恩餐會 - 翠綠標題質感版 (亮橘得獎無發光)</title>
+<title>🎰 福瑞斯特謝師感恩餐會 - 翠綠標題質感版 (亮橘得獎完全無發光)</title>
 <style>
     /* ================= 基本設定 ================= */
     * { box-sizing: border-box; }
@@ -21,7 +21,7 @@
         padding: 20px; border-right: 2px solid #1a1a1a;
     }
 
-    /* 【標題】修正為翠綠色，移除發光效果 */
+    /* 【標題】翠綠色，完全無發光 */
     h1 {
         color: #2ecc71; 
         font-size: 45px; margin: 0 0 15px 0;
@@ -45,7 +45,7 @@
     #nextPrizeBtn:hover:not(:disabled) { background: #0096c7; transform: scale(1.05); }
     #nextPrizeBtn:disabled { background: #222; color: #555; }
 
-    /* 目前獎項顯示：亮黃框，移除發光效果 */
+    /* 目前獎項顯示：亮黃框，無發光 */
     #currentPrize {
         color: #ffff00; font-size: 28px; font-weight: bold;
         background: rgba(0, 0, 0, 0.6); padding: 10px 40px;
@@ -58,14 +58,12 @@
         font-size: 24px; font-weight: bold; cursor: pointer; transition: 0.2s;
         background: linear-gradient(135deg, #ffff00, #ffcc00); color: #000;
     }
-    /* 移除 hover 時的發光效果 */
     #drawBtn:hover:not(:disabled) { transform: scale(1.05); }
 
-    /* 拉霸容器 */
+    /* 拉霸容器 (已移除所有內外陰影) */
     .slot-machine-container {
         width: 100%; padding: 25px;
         background: #0f0f0f; border-radius: 20px; border: 4px solid #222;
-        box-shadow: inset 0 0 50px #000;
     }
 
     #slotMachine { display: grid; grid-template-columns: repeat(5, 1fr); gap: 15px; }
@@ -77,6 +75,7 @@
         border: 2px solid #333;
     }
     
+    /* 滾輪上下遮罩效果 (保留此項以維持拉霸捲動立體感) */
     .reel::after {
         content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
         background: linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, transparent 40%, transparent 60%, rgba(0,0,0,0.7) 100%);
@@ -90,7 +89,7 @@
         font-size: 38px; font-weight: 500; color: #555;
     }
 
-    /* 得獎者文字：亮橘色大字，移除發光效果 */
+    /* 得獎者文字：亮橘色大字，完全無發光 */
     .slot-winner-name { 
         color: #FF8C00; 
         font-size: 56px; 
