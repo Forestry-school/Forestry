@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>謝師宴摸彩系統</title>
+
+<style>
+
+body{
+    margin:0;
+    background:#111;
+    color:white;
+    font-family:Arial;
+}
+
+.container{
+    display:flex;
+    min-height:100vh;
+}
+
+.left,
+.right{
+    width:25%;
+    background:#1b1b1b;
+    padding:20px;
+    overflow:auto;
+}
+
+.center{
+    flex:1;
+    text-align:center;
+    padding:30px;
+}
+
+h1{
+    color:gold;
+    font-size:50px;
+}
+
+.slot{
+    width:80%;
+    height:150px;
+    margin:auto;
+    margin-top:50px;
+    border:5px solid gold;
+    border-radius:20px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:black;
+    box-shadow:0 0 30px gold;
+}
+
+#rollingName{
+    font-size:55px;
+    color:gold;
+    font-weight:bold;
+}
+
+button{
+    margin-top:30px;
+    padding:15px 40px;
+    border:none;
+    border-radius:15px;
+    background:gold;
+    color:black;
+    font-size:24px;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+button:hover{
+    transform:scale(1.05);
+}
+
+.prize-card{
+    border:2px solid gold;
+    border-radius:15px;
+    padding:15px;
+    margin-bottom:15px;
+}
+
+.active{
+    background:gold;
+    color:black;
+}
+
+#winnerList li{
+    font-size:32px;
+    margin:15px;
+    color:gold;
+}
+
+.allWinner{
+    border-bottom:1px solid rgba(255,255,255,0.2);
+    padding:10px 0;
+}
+
+.resetBtn{
+    background:crimson;
+    color:white;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- 左邊 -->
+    <div class="left">
+
+        <h2>🎁 獎項列表</h2>
+
+        <div id="prizeList"></div>
+
+    </div>
+
+    <!-- 中間 -->
+    <div class="center">
+
+        <h1>🎰 謝師宴摸彩 🎰</h1>
+
+        <div class="slot">
+            <div id="rollingName">
+                準備開始抽獎
+            </div>
+        </div>
+
+        <button id="drawBtn">
+            開始抽獎
+        </button>
+
+        <br>
+
+        <button class="resetBtn" id="resetBtn">
+            重置所有抽獎
+        </button>
+
+        <h2>🏆 本輪得獎者</h2>
+
+        <ul id="winnerList"></ul>
+
+    </div>
+
+    <!-- 右邊 -->
+    <div class="right">
+
+        <h2>📜 所有得獎名單</h2>
+
+        <div id="allWinnerList"></div>
+
+    </div>
+
+</div>
+
+<script>
+
+////////////////////////////////////////////////////////
+// Google Apps Script API
+////////////////////////////////////////////////////////
+
+const API_URL =
+'https://script.google.com/macros/s/你的網址/exec';
+
+////////////////////////////////////////////////////////
+
+let people = [];
+let prizes = [];
+let winners = [];
+
+let currentPrizeIndex = 0;
+
+const rollingName =
+document.getElementById("rollingName");
+
+const drawBtn =
+document.getElementById("drawBtn");
+
+const winnerList =
+document.getElementById("winnerList");
+
+////////////////////////////////////////////////////////
+// 初始化
+////////////////////////////////////////////////////////
+
+async function init(){
+
+    const response =
+    await fetch(API_URL);
+
+    const data =
+    await response.json();
+
+    people = data.people;
+    prizes = data.prizes;
+    winners = data.winners;
+
+    renderPrizeList();
+
+    renderAllWinners();
+
+    findCurrentPrize();
+}
+
+////////////////////////////////////////////////////////
+// 找到目前抽到哪個獎項
+////////////////////////////////////////////////////////
+
+function findCurrentPrize(){
+
+    let prizeCounter = {};
+
+    winners.forEach(w=>{
+
+        if(!prizeCounter[w.prize]){
+
+            prizeCounter[w.prize] = 0;
+        }
+
+        prizeCounter[w.prize]++;
+    });
+
+    for(let i=0;i<prizes.length;i++){
+
+        const prizeName =
+        prizes[i]["獎項"];
+
+        const prizeCount =
+        parseInt(prizes[i]["人數"]);
+
+        const currentCount =
+        prizeCounter[prizeName] || 0;
+
+        if(currentCount < prizeCount){
+
+            currentPrizeIndex = i;
+
+            break;
+        }
+    }
+
+    renderPrizeList();
+}
+
+////////////////////////////////////////////////////////
+// 顯示獎項
+////////////////////////////////////////////////////////
+
+function renderPrizeList(){
+
+    const div =
+    document.getElementById("prizeList");
+
+    div.innerHTML = "";
+
+    prizes.forEach((prize,index)=>{
+
+        const card =
+        document.createElement("div");
+
+        card.className = "prize-card";
+
+        if(index === currentPrizeIndex){
+
+            card.classList.add("active");
+        }
+
+        card.innerHTML = `
+            <h3>${prize["獎項"]}</h3>
+            <p>${prize["人數"]} 人</p>
+        `;
+
+        div.appendChild(card);
+    });
+}
+
+////////////////////////////////////////////////////////
+// 顯示所有得獎名單
+////////////////////////////////////////////////////////
+
+function renderAllWinners(){
+
+    const div =
+    document.getElementById("allWinnerList");
+
+    div.innerHTML = "";
+
+    winners.forEach(w=>{
+
+        div.innerHTML += `
+            <div class="allWinner">
+                🎉 ${w.prize}
+                <br>
+                ${w.name} (${w.unit})
+            </div>
+        `;
+    });
+}
+
+////////////////////////////////////////////////////////
+// 取得未中獎名單
+////////////////////////////////////////////////////////
+
+function getAvailablePeople(){
+
+    const winnerNames =
+    winners.map(w=>w.name);
+
+    return people.filter(
+        p => !winnerNames.includes(p["姓名"])
+    );
+}
+
+////////////////////////////////////////////////////////
+// 抽獎
+////////////////////////////////////////////////////////
+
+async function drawLottery(){
+
+    if(currentPrizeIndex >= prizes.length){
+
+        alert("所有獎項已抽完");
+
+        return;
+    }
+
+    drawBtn.disabled = true;
+
+    winnerList.innerHTML = "";
+
+    const prize =
+    prizes[currentPrizeIndex];
+
+    const prizeName =
+    prize["獎項"];
+
+    const drawCount =
+    parseInt(prize["人數"]);
+
+    const available =
+    getAvailablePeople();
+
+    if(available.length < drawCount){
+
+        alert("剩餘人數不足");
+
+        drawBtn.disabled = false;
+
+        return;
+    }
+
+    ////////////////////////////////////////////////////////
+    // 跑馬燈
+    ////////////////////////////////////////////////////////
+
+    let rolling = setInterval(()=>{
+
+        const random =
+        available[
+            Math.floor(
+                Math.random() * available.length
+            )
+        ];
+
+        rollingName.innerText =
+        `${random["姓名"]}`;
+
+    },80);
+
+    ////////////////////////////////////////////////////////
+    // 4秒後停止
+    ////////////////////////////////////////////////////////
+
+    setTimeout(async ()=>{
+
+        clearInterval(rolling);
+
+        let temp = [...available];
+
+        let currentWinners = [];
+
+        for(let i=0;i<drawCount;i++){
+
+            const randomIndex =
+            Math.floor(
+                Math.random() * temp.length
+            );
+
+            const winner =
+            temp[randomIndex];
+
+            currentWinners.push(winner);
+
+            temp.splice(randomIndex,1);
+        }
+
+        rollingName.innerText =
+        "🎉 恭喜得獎 🎉";
+
+        ////////////////////////////////////////////////////////
+        // 顯示本輪得獎
+        ////////////////////////////////////////////////////////
+
+        currentWinners.forEach(w=>{
+
+            const li =
+            document.createElement("li");
+
+            li.innerText =
+            `${w["姓名"]} (${w["單位"]})`;
+
+            winnerList.appendChild(li);
+
+            winners.push({
+                prize:prizeName,
+                unit:w["單位"],
+                name:w["姓名"]
+            });
+        });
+
+        ////////////////////////////////////////////////////////
+        // 寫回 Google Sheet
+        ////////////////////////////////////////////////////////
+
+        await fetch(API_URL,{
+
+            method:"POST",
+
+            body:JSON.stringify({
+
+                prize:prizeName,
+
+                winners:currentWinners
+            })
+        });
+
+        ////////////////////////////////////////////////////////
+
+        renderAllWinners();
+
+        currentPrizeIndex++;
+
+        renderPrizeList();
+
+        drawBtn.disabled = false;
+
+    },4000);
+}
+
+////////////////////////////////////////////////////////
+// 重置所有抽獎
+////////////////////////////////////////////////////////
+
+async function resetLottery(){
+
+    if(!confirm("確定要清空所有得獎資料嗎？")){
+
+        return;
+    }
+
+    await fetch(API_URL,{
+
+        method:"POST",
+
+        body:JSON.stringify({
+
+            action:"reset"
+        })
+    });
+
+    alert("已重置");
+
+    location.reload();
+}
+
+////////////////////////////////////////////////////////
+
+drawBtn.addEventListener(
+    "click",
+    drawLottery
+);
+
+document.getElementById("resetBtn")
+.addEventListener(
+    "click",
+    resetLottery
+);
+
+////////////////////////////////////////////////////////
+
+init();
+
+</script>
+
+</body>
+</html>
