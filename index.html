@@ -25,13 +25,13 @@
         display: flex;
         flex-direction: column;
         align-items: center;
-        margin-right: 20%;
+        margin-right: 20%; /* 保留給右邊得獎名單的空間 */
         min-width: 0;
     }
 
     h1 {
         color: gold;
-        font-size: 52px;
+        font-size: 48px;
         margin: 0 0 20px 0;
         text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
     }
@@ -58,8 +58,8 @@
 
     #currentPrize {
         color: #fff;
-        font-size: 30px;
-        margin-bottom: 30px;
+        font-size: 28px;
+        margin-bottom: 25px;
         background: rgba(255, 215, 0, 0.15);
         padding: 12px 35px;
         border-radius: 50px;
@@ -69,7 +69,7 @@
     /* ================= 核心：擬真拉霸機台 ================= */
     .slot-machine-container {
         background: #1a1a1a;
-        padding: 30px;
+        padding: 25px;
         border-radius: 20px;
         border: 6px solid #333;
         box-shadow: inset 0 0 30px #000, 0 10px 40px rgba(0,0,0,0.8);
@@ -82,19 +82,19 @@
         flex-wrap: wrap;
         justify-content: center;
         gap: 12px; 
-        /* 【關鍵修改】 (115px * 10個) + (12px * 9個間距) = 1258px */
-        /* 這樣設定可以強制第 11 個必定換行，完美達成一列最多 10 個 */
-        max-width: 1258px; 
+        /* 【關鍵修正】這就是 10 個一排的密碼！ 
+           10個滾輪 (含邊框96px) + 9個間距 (12px) = 1068px */
+        max-width: 1068px; 
         margin: 0 auto;
     }
 
     /* 單一滾輪設計 */
     .reel {
-        width: 115px; 
-        height: 115px; 
-        box-sizing: content-box; 
+        width: 90px; 
+        height: 90px; 
+        box-sizing: content-box; /* 確保邊框是往外長，90+3+3 = 96px */
         overflow: hidden;
-        border-radius: 12px;
+        border-radius: 10px;
         position: relative;
         background: linear-gradient(to bottom, #f9f9f9, #d9d9d9);
         border: 3px solid #000;
@@ -117,18 +117,18 @@
 
     .slot-name {
         width: 100%;
-        height: 115px; /* 必須與 .reel 高度完全一致 */
+        height: 90px; /* 必須與 .reel 高度完全一致 */
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 28px; 
+        font-size: 24px; 
         font-weight: 900;
         color: #111;
     }
 
     .slot-winner-name {
         color: #d10000; 
-        font-size: 38px; 
+        font-size: 32px; 
     }
 
     /* ================= 名單區 ================= */
@@ -145,9 +145,9 @@
         background: rgba(255, 215, 0, 0.1);
         border: 2px solid gold;
         border-radius: 12px;
-        padding: 12px 24px;
+        padding: 10px 20px;
         color: gold;
-        font-size: 26px;
+        font-size: 24px;
         font-weight: bold;
     }
 
@@ -158,10 +158,10 @@
         gap: 10px;
     }
     .remain-item {
-        padding: 8px 14px;
+        padding: 6px 12px;
         background: #111;
         border: 1px solid #333;
-        border-radius: 8px;
+        border-radius: 6px;
         color: #777;
         font-size: 14px;
     }
@@ -178,17 +178,17 @@
         border-left: 2px solid #333;
         padding: 30px 15px;
     }
-    .right-panel h2 { color: gold; font-size: 24px; border-bottom: 2px solid gold; padding-bottom: 15px; margin-top: 0; }
+    .right-panel h2 { color: gold; font-size: 22px; border-bottom: 2px solid gold; padding-bottom: 15px; margin-top: 0; }
     .allWinner { padding: 15px 0; border-bottom: 1px solid #2a2a2a; }
-    .prize-title { color: gold; font-size: 22px; margin-bottom: 10px; font-weight: bold; }
-    .prize-names { color: #ddd; line-height: 1.8; font-size: 18px; }
+    .prize-title { color: gold; font-size: 20px; margin-bottom: 8px; font-weight: bold; }
+    .prize-names { color: #ddd; line-height: 1.8; font-size: 16px; }
 
 </style>
 </head>
 <body>
 
     <div class="main-panel">
-        <h1>🎰 謝師宴拉霸摸彩 🎰</h1>
+        <h1>🎰 福瑞斯特中小學謝師感恩餐會 🎰</h1>
 
         <div class="btn-group">
             <button id="drawBtn">開始抽獎</button>
@@ -225,8 +225,8 @@
     let winners = [];
     let currentPrizeIndex = 0;
 
-    // ★ 這裡同步改為 115，確保字體對齊正中間
-    const SLOT_HEIGHT = 115; 
+    // ★ 同步改為 90，對應新的 CSS 尺寸
+    const SLOT_HEIGHT = 90; 
     const TOTAL_FAKE_NAMES = 30; 
 
     async function init() {
