@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>🎰 福瑞斯特謝師感恩餐會 - 橫向併排精鍊版</title>
+<title>🎰 福瑞斯特謝師感恩餐會 - 尊榮大字版</title>
 <style>
     * { box-sizing: border-box; }
     body {
@@ -50,7 +50,7 @@
         color: #fff; font-size: 28px; font-weight: bold;
         background: rgba(255, 215, 0, 0.1); padding: 10px 40px;
         border-radius: 50px; border: 2px solid gold;
-        min-width: 350px; text-align: center;
+        min-width: 380px; text-align: center;
     }
 
     #drawBtn {
@@ -64,7 +64,7 @@
 
     /* 拉霸機台 */
     .slot-machine-container {
-        width: 100%; padding: 20px;
+        width: 100%; padding: 25px;
         background: #111; border-radius: 20px; border: 4px solid #333;
         box-shadow: inset 0 0 50px #000;
     }
@@ -76,8 +76,9 @@
     }
 
     .reel {
-        height: 150px; overflow: hidden; border-radius: 10px; position: relative;
-        background: linear-gradient(to bottom, #fff 0%, #ccc 50%, #fff 100%);
+        height: 170px; /* 增加高度配合大字體 */
+        overflow: hidden; border-radius: 10px; position: relative;
+        background: linear-gradient(to bottom, #fff 0%, #eee 50%, #fff 100%);
         border: 3px solid #000;
     }
     
@@ -88,12 +89,21 @@
     }
 
     .reel-inner { display: flex; flex-direction: column; }
+    
+    /* 普通名字滾動字體 */
     .slot-name {
-        width: 100%; height: 150px; display: flex; align-items: center;
+        width: 100%; height: 170px; display: flex; align-items: center;
         justify-content: center; text-align: center; 
-        font-size: 36px; font-weight: 900; color: #111;
+        font-size: 36px; font-weight: 900; color: #444;
     }
-    .slot-winner-name { color: #d00000; font-size: 42px; }
+
+    /* 【重要修改】得獎者字體：放大、深藍色、去除紅色 */
+    .slot-winner-name { 
+        color: #003366; /* 深海藍，穩重且尊榮 */
+        font-size: 52px; /* 再次放大 */
+        font-weight: 900;
+        text-shadow: 0 0 10px rgba(255, 255, 255, 0.8); /* 增加白色光暈增加可讀性 */
+    }
 
     /* 右側面板 */
     .right-panel {
@@ -112,7 +122,7 @@
         background: #333; color: #aaa; border: none; padding: 5px 10px;
         border-radius: 5px; cursor: pointer; font-size: 12px;
     }
-    #resetBtn:hover { background: #900; color: white; }
+    #resetBtn:hover { background: #600; color: white; }
 
     .allWinner { padding: 10px 0; border-bottom: 1px solid #222; }
     .prize-title { color: gold; font-size: 18px; font-weight: bold; }
@@ -155,7 +165,7 @@
     let prizes = [];
     let winners = [];
     let currentPrizeIndex = -1;
-    const SLOT_HEIGHT = 150; 
+    const SLOT_HEIGHT = 170; 
     const TOTAL_FAKE_NAMES = 60; 
 
     async function init() {
@@ -274,7 +284,7 @@
         });
 
         setTimeout(async () => {
-            spinSound.pause(); // 抽完立即停音
+            spinSound.pause(); 
             spinSound.currentTime = 0;
 
             currentWinners.forEach(w => winners.push({ prize: prize["獎項"], name: w["姓名"] }));
@@ -289,7 +299,7 @@
     document.getElementById("nextPrizeBtn").addEventListener("click", prepareNextPrize);
     document.getElementById("drawBtn").addEventListener("click", drawLottery);
     document.getElementById("resetBtn").addEventListener("click", async () => {
-        if(confirm("重置將清除所有紀錄，確定嗎？")) {
+        if(confirm("確定要重置嗎？")) {
             await fetch(API_URL, { method: "POST", body: JSON.stringify({ action: "reset" }) });
             location.reload();
         }
