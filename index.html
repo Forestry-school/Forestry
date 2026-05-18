@@ -180,7 +180,7 @@ function showCurrentPrize(){
 }
 
 ////////////////////////////////////////////////////////
-// 顯示全部得獎名單
+// 顯示全部得獎名單（分組版）
 ////////////////////////////////////////////////////////
 
 function renderAllWinners(){
@@ -190,17 +190,39 @@ function renderAllWinners(){
 
     div.innerHTML = "";
 
+    ////////////////////////////////////////////////////
+    // 分組
+    ////////////////////////////////////////////////////
+
+    let grouped = {};
+
     winners.forEach(w=>{
+
+        if(!grouped[w.prize]){
+
+            grouped[w.prize] = [];
+        }
+
+        grouped[w.prize].push(w.name);
+    });
+
+    ////////////////////////////////////////////////////
+    // 顯示
+    ////////////////////////////////////////////////////
+
+    Object.keys(grouped).forEach(prize=>{
 
         div.innerHTML += `
 
             <div class="allWinner">
 
-                🎉 ${w.prize}
+                <div class="prize-title">
+                    🎉 ${prize}
+                </div>
 
-                <br>
-
-                ${w.name}
+                <div class="prize-names">
+                    ${grouped[prize].join("、")}
+                </div>
 
             </div>
         `;
@@ -424,7 +446,7 @@ async function drawLottery(){
         },100);
 
         //////////////////////////////////////////////////////
-        // 本輪得獎者
+        // 本輪得獎
         //////////////////////////////////////////////////////
 
         const ul =
@@ -472,7 +494,15 @@ async function drawLottery(){
 
         renderAllWinners();
 
-        renderRemainList();
+        //////////////////////////////////////////////////////
+        // 修正未中獎同步問題
+        //////////////////////////////////////////////////////
+
+        setTimeout(()=>{
+
+            renderRemainList();
+
+        },300);
 
         currentPrizeIndex++;
 
