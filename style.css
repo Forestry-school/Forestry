@@ -128,22 +128,19 @@ button:hover{
     align-items:center;
 }
 
-.slot-unit{
-
-    font-size:24px;
-
-    color:white;
-
-    margin-bottom:12px;
-}
-
 .slot-name{
 
-    font-size:40px;
+    font-size:42px;
 
     font-weight:bold;
 
     color:gold;
+}
+
+.only-name{
+
+    text-shadow:
+    0 0 10px gold;
 }
 
 #winnerList{
@@ -181,4 +178,39 @@ button:hover{
 .winner-title{
     color:gold;
     margin-top:50px;
+}
+
+.remain-title{
+
+    color:#00e5ff;
+
+    margin-top:50px;
+}
+
+#remainList{
+
+    margin-top:20px;
+
+    display:flex;
+
+    flex-wrap:wrap;
+
+    justify-content:center;
+
+    gap:10px;
+}
+
+.remain-item{
+
+    padding:10px 16px;
+
+    border-radius:12px;
+
+    background:#111;
+
+    border:2px solid #00e5ff;
+
+    color:#00e5ff;
+
+    font-size:20px;
 }
