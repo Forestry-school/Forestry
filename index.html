@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>🎰 福瑞斯特謝師感恩餐會 - 節奏控制版</title>
+<title>🎰 福瑞斯特謝師感恩餐會 - 穩定加強版</title>
 <style>
     /* ================= 基本設定 ================= */
     * { box-sizing: border-box; }
@@ -36,13 +36,11 @@
     }
     button:active { transform: scale(0.95); }
     
-    /* 準備獎項按鈕：藍色 */
+    /* 初始狀態按鈕是灰色的，直到資料載入 */
     #nextPrizeBtn { background: linear-gradient(135deg, #00d2ff, #3a7bd5); color: white; box-shadow: 0 6px 15px rgba(0, 210, 255, 0.3); }
-    #nextPrizeBtn:disabled { background: #333; color: #666; cursor: not-allowed; box-shadow: none; }
-
-    /* 開始抽獎按鈕：金色 */
     #drawBtn { background: linear-gradient(135deg, #ffd700, #ffaa00); color: #000; box-shadow: 0 6px 20px rgba(255, 215, 0, 0.4); }
-    #drawBtn:disabled { background: #333; color: #666; cursor: not-allowed; box-shadow: none; }
+    
+    button:disabled { background: #333 !important; color: #666 !important; cursor: not-allowed !important; box-shadow: none !important; }
 
     #resetBtn { background: #444; color: #ccc; font-size: 16px; padding: 10px 20px; }
 
@@ -50,7 +48,7 @@
         color: #fff; font-size: 36px; margin-bottom: 35px;
         background: rgba(255, 215, 0, 0.1); padding: 15px 50px;
         border-radius: 60px; border: 3px solid gold; font-weight: bold;
-        min-height: 80px; display: flex; align-items: center;
+        min-height: 90px; display: flex; align-items: center; text-align: center;
     }
 
     /* ================= 核心：滿版拉霸機台 ================= */
@@ -62,8 +60,10 @@
     }
 
     #slotMachine {
-        display: grid; grid-template-columns: repeat(5, 1fr);
-        gap: 25px; margin: 0 auto;
+        display: grid; 
+        /* 關鍵：永遠保持 5 欄 */
+        grid-template-columns: repeat(5, 1fr);
+        gap: 20px; margin: 0 auto;
     }
 
     .reel {
@@ -83,33 +83,36 @@
 
     .slot-name {
         width: 100%; height: 140px; display: flex; align-items: center;
-        justify-content: center; text-align: center; padding: 0 10px;
-        font-size: 36px; font-weight: 900; color: #111; white-space: nowrap;
+        justify-content: center; text-align: center; 
+        padding: 0 15px; /* 增加左右間距防止消邊 */
+        font-size: 36px; font-weight: 900; color: #111; 
+        white-space: nowrap;
+        overflow: hidden; /* 防止名字太長撐破格子 */
     }
 
     .slot-winner-name { color: #e60000; font-size: 42px; text-shadow: 1px 1px 0px rgba(255,255,255,0.8); }
 
     /* ================= 下方名單區 ================= */
     h2 { color: #00e5ff; font-size: 32px; margin-top: 30px; }
-    #winnerList { display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; margin-bottom: 50px; }
+    #winnerList { display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-bottom: 50px; }
     .winner-item {
         background: linear-gradient(135deg, rgba(255,215,0,0.2), rgba(255,215,0,0.05));
-        border: 2px solid gold; border-radius: 15px; padding: 12px 30px;
-        color: gold; font-size: 30px; font-weight: bold;
+        border: 2px solid gold; border-radius: 15px; padding: 10px 25px;
+        color: gold; font-size: 28px; font-weight: bold;
     }
 
-    #remainList { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; opacity: 0.6; }
-    .remain-item { padding: 8px 16px; background: #111; border: 1px solid #333; border-radius: 8px; color: #888; font-size: 16px; }
+    #remainList { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; opacity: 0.6; }
+    .remain-item { padding: 6px 12px; background: #111; border: 1px solid #333; border-radius: 8px; color: #888; font-size: 14px; }
 
     /* ================= 右側：全部得獎名單 ================= */
     .right-panel {
         position: fixed; right: 0; top: 0; width: 20%; height: 100vh;
         overflow-y: auto; background: #111; border-left: 3px solid #333; padding: 30px 20px;
     }
-    .right-panel h2 { color: gold; font-size: 26px; border-bottom: 2px solid gold; padding-bottom: 15px; margin-top: 0; text-align: left; }
-    .allWinner { padding: 18px 0; border-bottom: 1px solid #222; }
-    .prize-title { color: gold; font-size: 22px; margin-bottom: 10px; font-weight: bold; }
-    .prize-names { color: #ccc; line-height: 1.8; font-size: 18px; }
+    .right-panel h2 { color: gold; font-size: 26px; border-bottom: 2px solid gold; padding-bottom: 15px; margin-top: 0; }
+    .allWinner { padding: 15px 0; border-bottom: 1px solid #222; }
+    .prize-title { color: gold; font-size: 20px; margin-bottom: 8px; font-weight: bold; }
+    .prize-names { color: #ccc; line-height: 1.6; font-size: 17px; }
 
 </style>
 </head>
@@ -119,12 +122,12 @@
         <h1>🎰 福瑞斯特謝師感恩餐會 🎰</h1>
 
         <div class="btn-group">
-            <button id="nextPrizeBtn">準備下一個獎項</button>
-            <button id="drawBtn" disabled>開始抽獎</button>
+            <button id="nextPrizeBtn" disabled>讀取資料中...</button>
+            <button id="drawBtn" disabled>等待獎項</button>
             <button id="resetBtn">重置</button>
         </div>
 
-        <div id="currentPrize">請先點擊「準備下一個獎項」</div>
+        <div id="currentPrize">正在從 Google 雲端讀取名單，請稍候...</div>
 
         <div class="slot-machine-container">
             <div id="slotMachine"></div>
@@ -152,24 +155,36 @@
     let people = [];
     let prizes = [];
     let winners = [];
-    let currentPrizeIndex = -1; // 初始設為 -1，表示還沒點準備獎項
+    let currentPrizeIndex = -1;
+    let isDataLoaded = false;
 
     const SLOT_HEIGHT = 140; 
     const TOTAL_FAKE_NAMES = 30; 
 
+    // 初始化：確保資料完全載入後才讓按鈕可用
     async function init() {
-        const response = await fetch(API_URL);
-        const data = await response.json();
-        people = data.people;
-        prizes = data.prizes;
-        winners = data.winners;
+        try {
+            const response = await fetch(API_URL);
+            const data = await response.json();
+            people = data.people;
+            prizes = data.prizes;
+            winners = data.winners;
 
-        renderAllWinners();
-        renderRemainList();
+            isDataLoaded = true;
+            document.getElementById("nextPrizeBtn").disabled = false;
+            document.getElementById("nextPrizeBtn").innerText = "準備下一個獎項";
+            document.getElementById("currentPrize").innerText = "資料讀取完畢，請點擊「準備下一個獎項」";
+            
+            renderAllWinners();
+            renderRemainList();
+        } catch (e) {
+            document.getElementById("currentPrize").innerText = "❌ 資料讀取失敗，請檢查網路或 API";
+        }
     }
 
-    // 點擊「下一個獎項」才去計算該抽什麼
     function prepareNextPrize() {
+        if (!isDataLoaded) return;
+
         let counter = {};
         winners.forEach(w => {
             if (!counter[w.prize]) counter[w.prize] = 0;
@@ -195,10 +210,10 @@
         if (found) {
             const prize = prizes[currentPrizeIndex];
             display.innerText = `🎁 目前抽：${prize["獎項"]} (${prize["人數"]}人)`;
-            drawBtn.disabled = false; // 啟動抽獎按鈕
-            nextBtn.disabled = true;  // 鎖定自己，避免重複點
-            document.getElementById("slotMachine").innerHTML = ""; // 清空上一輪方塊
-            document.getElementById("winnerList").innerHTML = "";  // 清空上一輪名單
+            drawBtn.disabled = false;
+            nextBtn.disabled = true; 
+            document.getElementById("slotMachine").innerHTML = ""; 
+            document.getElementById("winnerList").innerHTML = ""; 
         } else {
             display.innerText = "🎉 所有獎項已全部抽完！";
             drawBtn.disabled = true;
@@ -250,31 +265,25 @@
             const nameStr = random ? random["姓名"] : "?";
             inner.innerHTML += `<div class="slot-name">${nameStr}</div>`;
         }
-
         inner.innerHTML += `<div class="slot-name slot-winner-name">${winnerData["姓名"]}</div>`;
-
         for (let i = 0; i < 3; i++) {
             const random = nameList[Math.floor(Math.random() * nameList.length)];
             const nameStr = random ? random["姓名"] : "?";
             inner.innerHTML += `<div class="slot-name">${nameStr}</div>`;
         }
-
         reel.appendChild(inner);
         return { reel, inner };
     }
 
     async function drawLottery() {
         const drawBtn = document.getElementById("drawBtn");
-        drawBtn.disabled = true; // 按下後立刻鎖死，防止連按
+        drawBtn.disabled = true;
 
         const prize = prizes[currentPrizeIndex];
         const available = getAvailablePeople();
         const drawCount = Math.min(parseInt(prize["人數"]), available.length);
 
-        if (drawCount === 0) {
-            alert("名額已滿！");
-            return;
-        }
+        if (drawCount === 0) return;
 
         const spinSound = document.getElementById("spinSound");
         spinSound.currentTime = 0;
@@ -302,10 +311,9 @@
 
         const targetY = -(TOTAL_FAKE_NAMES * SLOT_HEIGHT);
         let maxSpinTime = 0;
-        const staggerDelay = 0.3; 
 
         slots.forEach((slot, index) => {
-            const duration = 3 + (index * staggerDelay);
+            const duration = 3 + (index * 0.3);
             if (duration > maxSpinTime) maxSpinTime = duration;
             slot.inner.style.transition = `transform ${duration}s cubic-bezier(0.1, 0.8, 0.1, 1.15)`;
             slot.inner.style.transform = `translateY(${targetY}px)`;
@@ -323,7 +331,6 @@
                 winners.push({ prize: prize["獎項"], name: w["姓名"] });
             });
 
-            // 回傳資料
             fetch(API_URL, {
                 method: "POST",
                 body: JSON.stringify({
@@ -334,20 +341,27 @@
 
             renderAllWinners();
             renderRemainList();
-            
-            // 重要：抽完後，要把「下一個」按鈕亮起來，讓主持人點
             document.getElementById("nextPrizeBtn").disabled = false;
 
         }, maxSpinTime * 1000 + 400);
     }
 
     async function resetLottery() {
-        if (!confirm("確定重置所有資料嗎？")) return;
+        if (!confirm("確定重置所有資料嗎？這將清空線上紀錄並重新開始。")) return;
+        
+        document.getElementById("currentPrize").innerText = "♻️ 正在清理雲端資料，請稍候...";
+        document.getElementById("nextPrizeBtn").disabled = true;
+        document.getElementById("drawBtn").disabled = true;
+
         await fetch(API_URL, {
             method: "POST",
             body: JSON.stringify({ action: "reset" })
         });
-        location.reload();
+        
+        // 延遲一下再重新整理，確保後端已經寫入成功
+        setTimeout(() => {
+            location.reload();
+        }, 1000);
     }
 
     document.getElementById("nextPrizeBtn").addEventListener("click", prepareNextPrize);
