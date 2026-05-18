@@ -25,13 +25,17 @@ content="width=device-width, initial-scale=1.0">
             🎰 謝師宴摸彩 🎰
         </h1>
 
-        <button id="drawBtn">
-            開始抽獎
-        </button>
+        <div class="btn-group">
 
-        <button id="resetBtn">
-            重置所有抽獎
-        </button>
+            <button id="drawBtn">
+                開始抽獎
+            </button>
+
+            <button id="resetBtn">
+                重置所有抽獎
+            </button>
+
+        </div>
 
         <!-- 目前獎項 -->
         <div id="currentPrize"></div>
@@ -55,10 +59,12 @@ content="width=device-width, initial-scale=1.0">
 
     </div>
 
-    <!-- 右邊 -->
+    <!-- 右側 -->
     <div class="right">
 
-        <h2>📜 所有得獎名單</h2>
+        <h2>
+            📜 所有得獎名單
+        </h2>
 
         <div id="allWinnerList"></div>
 
@@ -180,7 +186,7 @@ function showCurrentPrize(){
 }
 
 ////////////////////////////////////////////////////////
-// 顯示全部得獎名單（分組版）
+// 顯示全部得獎名單
 ////////////////////////////////////////////////////////
 
 function renderAllWinners(){
@@ -189,10 +195,6 @@ function renderAllWinners(){
     document.getElementById("allWinnerList");
 
     div.innerHTML = "";
-
-    ////////////////////////////////////////////////////
-    // 分組
-    ////////////////////////////////////////////////////
 
     let grouped = {};
 
@@ -205,10 +207,6 @@ function renderAllWinners(){
 
         grouped[w.prize].push(w.name);
     });
-
-    ////////////////////////////////////////////////////
-    // 顯示
-    ////////////////////////////////////////////////////
 
     Object.keys(grouped).forEach(prize=>{
 
@@ -292,7 +290,7 @@ function renderRollingSlots(people){
 
             <div class="slot-inner">
 
-                <div class="slot-name only-name">
+                <div class="slot-name">
                     ${person["姓名"]}
                 </div>
 
@@ -323,7 +321,7 @@ async function drawLottery(){
     drawBtn.disabled = true;
 
     //////////////////////////////////////////////////////
-    // 播放音效
+    // 音效
     //////////////////////////////////////////////////////
 
     const spinSound =
@@ -347,17 +345,8 @@ async function drawLottery(){
     const available =
     getAvailablePeople();
 
-    if(available.length < drawCount){
-
-        alert("剩餘人數不足");
-
-        drawBtn.disabled = false;
-
-        return;
-    }
-
     //////////////////////////////////////////////////////
-    // 開始跑名字
+    // 跑動動畫
     //////////////////////////////////////////////////////
 
     let rolling = true;
@@ -391,29 +380,21 @@ async function drawLottery(){
     },100);
 
     //////////////////////////////////////////////////////
-    // 5秒後停止
+    // 五秒後停止
     //////////////////////////////////////////////////////
 
     setTimeout(async ()=>{
 
-        //////////////////////////////////////////////////////
-        // 完全停止
-        //////////////////////////////////////////////////////
-
         rolling = false;
 
         clearInterval(rollingInterval);
-
-        //////////////////////////////////////////////////////
-        // 停止音效
-        //////////////////////////////////////////////////////
 
         spinSound.pause();
 
         spinSound.currentTime = 0;
 
         //////////////////////////////////////////////////////
-        // 正式中獎名單
+        // 正式得獎
         //////////////////////////////////////////////////////
 
         let temp = [...available];
@@ -436,7 +417,7 @@ async function drawLottery(){
         }
 
         //////////////////////////////////////////////////////
-        // 顯示最終得獎
+        // 顯示中獎
         //////////////////////////////////////////////////////
 
         setTimeout(()=>{
@@ -468,8 +449,6 @@ async function drawLottery(){
 
                 prize:prizeName,
 
-                unit:w["單位"],
-
                 name:w["姓名"]
             });
         });
@@ -494,10 +473,6 @@ async function drawLottery(){
 
         renderAllWinners();
 
-        //////////////////////////////////////////////////////
-        // 修正未中獎同步問題
-        //////////////////////////////////////////////////////
-
         setTimeout(()=>{
 
             renderRemainList();
@@ -509,7 +484,7 @@ async function drawLottery(){
         showCurrentPrize();
 
         //////////////////////////////////////////////////////
-        // 3秒後可再次抽獎
+        // 解鎖按鈕
         //////////////////////////////////////////////////////
 
         setTimeout(()=>{
