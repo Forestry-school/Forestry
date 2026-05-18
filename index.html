@@ -97,11 +97,19 @@ button{
 
     color:gold;
 
-    font-size:36px;
+    font-size:30px;
 
     font-weight:bold;
 
     box-shadow:0 0 20px gold;
+
+    white-space:pre-line;
+
+    line-height:1.5;
+
+    padding:10px;
+
+    text-align:center;
 }
 
 #winnerList{
@@ -245,7 +253,7 @@ function findCurrentPrize(){
 }
 
 ////////////////////////////////////////////////////////
-// 顯示所有得獎名單
+// 顯示全部得獎名單
 ////////////////////////////////////////////////////////
 
 function renderAllWinners(){
@@ -382,7 +390,7 @@ async function drawLottery(){
     },80);
 
     //////////////////////////////////////////////////////
-    // 停止
+    // 4秒後停止
     //////////////////////////////////////////////////////
 
     setTimeout(async ()=>{
@@ -409,12 +417,12 @@ async function drawLottery(){
         }
 
         //////////////////////////////////////////////////////
-        // 顯示最終得獎者
+        // 最終顯示
         //////////////////////////////////////////////////////
 
         const finalNames =
         currentWinners.map(
-            w => `${w["姓名"]}`
+            w => `${w["姓名"]}\n${w["單位"]}`
         );
 
         renderRollingSlots(finalNames);
@@ -422,11 +430,6 @@ async function drawLottery(){
         //////////////////////////////////////////////////////
         // 顯示本輪
         //////////////////////////////////////////////////////
-
-        const ul =
-        document.getElementById("winnerList");
-
-        ul.innerHTML = "";
 
         currentWinners.forEach(w=>{
 
@@ -436,7 +439,9 @@ async function drawLottery(){
             li.innerText =
             `${w["姓名"]} (${w["單位"]})`;
 
-            ul.appendChild(li);
+            document
+            .getElementById("winnerList")
+            .appendChild(li);
 
             winners.push({
 
@@ -470,7 +475,15 @@ async function drawLottery(){
 
         currentPrizeIndex++;
 
-        drawBtn.disabled = false;
+        //////////////////////////////////////////////////////
+        // 停留畫面
+        //////////////////////////////////////////////////////
+
+        setTimeout(()=>{
+
+            drawBtn.disabled = false;
+
+        },3000);
 
     },4000);
 }
