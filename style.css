@@ -67,6 +67,22 @@ button:hover{
     color:white;
 }
 
+#currentPrize{
+
+    color:gold;
+
+    font-size:36px;
+
+    margin-top:20px;
+
+    margin-bottom:30px;
+
+    font-weight:bold;
+
+    text-shadow:
+    0 0 10px gold;
+}
+
 #slotContainer{
 
     display:grid;
@@ -76,7 +92,7 @@ button:hover{
 
     gap:25px;
 
-    margin-top:50px;
+    margin-top:40px;
 }
 
 .slot-card{
@@ -112,9 +128,6 @@ button:hover{
     justify-content:center;
 
     align-items:center;
-
-    animation:
-    slotMove 0.08s linear infinite;
 }
 
 .slot-unit{
@@ -133,17 +146,6 @@ button:hover{
     font-weight:bold;
 
     color:gold;
-}
-
-@keyframes slotMove{
-
-    0%{
-        transform:translateY(-10px);
-    }
-
-    100%{
-        transform:translateY(10px);
-    }
 }
 
 @keyframes glow{
