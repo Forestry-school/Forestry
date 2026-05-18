@@ -1,153 +1,238 @@
-////////////////////////////////////////////////////////
-// 建立拉霸條 (每個拉霸條包含 30個假名單 + 1個真得獎者 + 緩衝區)
-////////////////////////////////////////////////////////
+<!DOCTYPE html>
+<html lang="zh-Hant">
 
-function createSlot(nameList, winnerData) {
-    const reel = document.createElement("div");
-    reel.className = "reel";
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎰 真實拉霸摸彩系統</title>
+    <link rel="stylesheet" href="style.css">
+</head>
 
-    const inner = document.createElement("div");
-    inner.className = "reel-inner";
+<body>
 
-    // 1. 塞入 30 個隨機名字作為滾動過程的「假象」
-    for (let i = 0; i < 30; i++) {
-        const random = nameList[Math.floor(Math.random() * nameList.length)];
-        inner.innerHTML += `
-            <div class="slot-name">
-                ${random["姓名"]}
-            </div>
-        `;
-    }
+    <div class="container">
+        <h1>🎰 謝師宴拉霸摸彩 🎰</h1>
 
-    // 2. 在第 30 個位置放入「真正的得獎者」 (目標停靠點)
-    inner.innerHTML += `
-        <div class="slot-name slot-winner-name">
-            ${winnerData["姓名"]}
+        <div class="btn-group">
+            <button id="drawBtn">開始抽獎</button>
+            <button id="resetBtn">重置所有抽獎</button>
         </div>
-    `;
 
-    // 3. 在底下多塞 3 個隨機名字當作「緩衝」。
-    // 這是為了配合回彈效果，避免拉霸回彈時露出底部空白
-    for (let i = 0; i < 3; i++) {
-        const random = nameList[Math.floor(Math.random() * nameList.length)];
-        inner.innerHTML += `
-            <div class="slot-name">
-                ${random["姓名"]}
-            </div>
-        `;
-    }
+        <div id="currentPrize"></div>
 
-    reel.appendChild(inner);
+        <div id="slotMachine"></div>
 
-    return {
-        reel,
-        inner
-    };
-}
+        <h2 class="winner-title">🏆 本輪得獎者</h2>
+        <div id="winnerList"></div>
 
-////////////////////////////////////////////////////////
-// 抽獎主邏輯
-////////////////////////////////////////////////////////
+        <h2 class="remain-title">🎯 尚未抽中名單</h2>
+        <div id="remainList"></div>
+    </div>
 
-async function drawLottery() {
-    const drawBtn = document.getElementById("drawBtn");
-    drawBtn.disabled = true;
+    <div class="right-panel">
+        <h2>📜 所有得獎名單</h2>
+        <div id="allWinnerList"></div>
+    </div>
 
-    const prize = prizes[currentPrizeIndex];
-    const drawCount = parseInt(prize["人數"]);
-    const available = getAvailablePeople();
+    <audio id="spinSound" preload="auto">
+        <source src="souce.m4a" type="audio/mp4">
+    </audio>
 
-    const spinSound = document.getElementById("spinSound");
-    spinSound.currentTime = 0;
-    spinSound.play();
+    <script>
+        const API_URL = 'https://script.google.com/macros/s/AKfycbyDm_9tAXT6vwCmqkpnLfecoukALyiVIRxkY5QubO3X8EMbbqIMmHnsG7p0AZza3q8/exec';
 
-    //////////////////////////////////////////////////////
-    // 1. 提早決定得獎者 (先抽出來，才知道拉霸要停在哪)
-    //////////////////////////////////////////////////////
-    let temp = [...available];
-    let currentWinners = [];
+        let people = [];
+        let prizes = [];
+        let winners = [];
+        let currentPrizeIndex = 0;
 
-    for (let i = 0; i < drawCount; i++) {
-        const randomIndex = Math.floor(Math.random() * temp.length);
-        currentWinners.push(temp[randomIndex]);
-        temp.splice(randomIndex, 1);
-    }
+        async function init() {
+            const response = await fetch(API_URL);
+            const data = await response.json();
+            people = data.people;
+            prizes = data.prizes;
+            winners = data.winners;
 
-    //////////////////////////////////////////////////////
-    // 2. 建立拉霸 DOM
-    //////////////////////////////////////////////////////
-    const machine = document.getElementById("slotMachine");
-    machine.innerHTML = "";
-    let slots = [];
+            findCurrentPrize();
+            renderAllWinners();
+            renderRemainList();
+            showCurrentPrize();
+        }
 
-    for (let i = 0; i < drawCount; i++) {
-        // 傳入可用名單以及這條拉霸專屬的得獎者
-        const slot = createSlot(available, currentWinners[i]);
-        machine.appendChild(slot.reel);
-        slots.push(slot);
-    }
-
-    // 強制瀏覽器重繪，確保稍後的 CSS Transition 能順利觸發
-    void machine.offsetWidth; 
-
-    //////////////////////////////////////////////////////
-    // 3. 開始滾動 (加入交錯時間與回彈曲線)
-    //////////////////////////////////////////////////////
-    
-    // 每個名字的高度是 140px，目標停靠點是第 30 個元素 (index 30)
-    // 所以要往上推 - (30 * 140)px = -4200px
-    const targetY = -(30 * 140); 
-
-    let maxSpinTime = 0;
-
-    slots.forEach((slot, index) => {
-        // 讓每條拉霸停下來的時間錯開 (例如: 3秒, 3.5秒, 4秒...)
-        const duration = 3 + (index * 0.5); 
-        if (duration > maxSpinTime) maxSpinTime = duration;
-
-        // 使用 cubic-bezier 創造「減速並微微回彈」的物理效果
-        slot.inner.style.transition = `transform ${duration}s cubic-bezier(0.1, 0.8, 0.1, 1.15)`;
-        slot.inner.style.transform = `translateY(${targetY}px)`;
-    });
-
-    //////////////////////////////////////////////////////
-    // 4. 等待最慢的那條拉霸停止後，結算 UI
-    //////////////////////////////////////////////////////
-    
-    setTimeout(async () => {
-        spinSound.pause();
-        spinSound.currentTime = 0;
-
-        const winnerList = document.getElementById("winnerList");
-        winnerList.innerHTML = "";
-
-        currentWinners.forEach(w => {
-            winnerList.innerHTML += `
-                <div class="winner-item">
-                    ${w["姓名"]}
-                </div>
-            `;
-            winners.push({
-                prize: prize["獎項"],
-                name: w["姓名"]
+        function findCurrentPrize() {
+            let counter = {};
+            winners.forEach(w => {
+                if (!counter[w.prize]) counter[w.prize] = 0;
+                counter[w.prize]++;
             });
-        });
 
-        // 寫回 Google Sheet (非同步執行，不卡畫面)
-        fetch(API_URL, {
-            method: "POST",
-            body: JSON.stringify({
-                prize: prize["獎項"],
-                winners: currentWinners
-            })
-        });
+            for (let i = 0; i < prizes.length; i++) {
+                const prizeName = prizes[i]["獎項"];
+                const total = parseInt(prizes[i]["人數"]);
+                const current = counter[prizeName] || 0;
+                if (current < total) {
+                    currentPrizeIndex = i;
+                    break;
+                }
+            }
+        }
 
-        renderAllWinners();
-        renderRemainList();
-        currentPrizeIndex++;
-        showCurrentPrize();
+        function showCurrentPrize() {
+            if (currentPrizeIndex >= prizes.length) {
+                document.getElementById("currentPrize").innerText = "🎉 所有獎項已抽完";
+                return;
+            }
+            const prize = prizes[currentPrizeIndex];
+            document.getElementById("currentPrize").innerText = `🎁 目前抽：${prize["獎項"]}（${prize["人數"]}人）`;
+        }
 
-        drawBtn.disabled = false;
+        function getAvailablePeople() {
+            const winnerNames = winners.map(w => w.name);
+            return people.filter(p => !winnerNames.includes(p["姓名"]));
+        }
 
-    }, maxSpinTime * 1000 + 300); // 加上 300ms 緩衝確保動畫播完
-}
+        function renderRemainList() {
+            const remain = getAvailablePeople();
+            const div = document.getElementById("remainList");
+            div.innerHTML = "";
+            remain.forEach(person => {
+                div.innerHTML += `<div class="remain-item">${person["姓名"]}</div>`;
+            });
+        }
+
+        function renderAllWinners() {
+            const div = document.getElementById("allWinnerList");
+            div.innerHTML = "";
+            let grouped = {};
+            winners.forEach(w => {
+                if (!grouped[w.prize]) grouped[w.prize] = [];
+                grouped[w.prize].push(w.name);
+            });
+
+            Object.keys(grouped).forEach(prize => {
+                div.innerHTML += `
+                    <div class="allWinner">
+                        <div class="prize-title">🎉 ${prize}</div>
+                        <div class="prize-names">${grouped[prize].join("、")}</div>
+                    </div>
+                `;
+            });
+        }
+
+        // --- 拉霸與抽獎核心 ---
+        function createSlot(nameList, winnerData) {
+            const reel = document.createElement("div");
+            reel.className = "reel";
+            const inner = document.createElement("div");
+            inner.className = "reel-inner";
+
+            // 1. 塞入 30 個隨機名字作為假象
+            for (let i = 0; i < 30; i++) {
+                const random = nameList[Math.floor(Math.random() * nameList.length)];
+                inner.innerHTML += `<div class="slot-name">${random["姓名"]}</div>`;
+            }
+
+            // 2. 在第 30 個位置放入真正的得獎者
+            inner.innerHTML += `<div class="slot-name slot-winner-name">${winnerData["姓名"]}</div>`;
+
+            // 3. 緩衝區
+            for (let i = 0; i < 3; i++) {
+                const random = nameList[Math.floor(Math.random() * nameList.length)];
+                inner.innerHTML += `<div class="slot-name">${random["姓名"]}</div>`;
+            }
+
+            reel.appendChild(inner);
+            return { reel, inner };
+        }
+
+        async function drawLottery() {
+            const drawBtn = document.getElementById("drawBtn");
+            drawBtn.disabled = true;
+
+            const prize = prizes[currentPrizeIndex];
+            const drawCount = parseInt(prize["人數"]);
+            const available = getAvailablePeople();
+
+            const spinSound = document.getElementById("spinSound");
+            spinSound.currentTime = 0;
+            spinSound.play();
+
+            // 先決定得獎者
+            let temp = [...available];
+            let currentWinners = [];
+            for (let i = 0; i < drawCount; i++) {
+                const randomIndex = Math.floor(Math.random() * temp.length);
+                currentWinners.push(temp[randomIndex]);
+                temp.splice(randomIndex, 1);
+            }
+
+            // 建立拉霸 DOM
+            const machine = document.getElementById("slotMachine");
+            machine.innerHTML = "";
+            let slots = [];
+
+            for (let i = 0; i < drawCount; i++) {
+                const slot = createSlot(available, currentWinners[i]);
+                machine.appendChild(slot.reel);
+                slots.push(slot);
+            }
+
+            void machine.offsetWidth; // 強制重繪
+
+            // 每個名字高度 140px，目標停在 index 30
+            const targetY = -(30 * 140);
+            let maxSpinTime = 0;
+
+            slots.forEach((slot, index) => {
+                const duration = 3 + (index * 0.5);
+                if (duration > maxSpinTime) maxSpinTime = duration;
+                slot.inner.style.transition = `transform ${duration}s cubic-bezier(0.1, 0.8, 0.1, 1.15)`;
+                slot.inner.style.transform = `translateY(${targetY}px)`;
+            });
+
+            // 結算
+            setTimeout(async () => {
+                spinSound.pause();
+                spinSound.currentTime = 0;
+
+                const winnerList = document.getElementById("winnerList");
+                winnerList.innerHTML = "";
+
+                currentWinners.forEach(w => {
+                    winnerList.innerHTML += `<div class="winner-item">${w["姓名"]}</div>`;
+                    winners.push({ prize: prize["獎項"], name: w["姓名"] });
+                });
+
+                fetch(API_URL, {
+                    method: "POST",
+                    body: JSON.stringify({
+                        prize: prize["獎項"],
+                        winners: currentWinners
+                    })
+                });
+
+                renderAllWinners();
+                renderRemainList();
+                currentPrizeIndex++;
+                showCurrentPrize();
+                drawBtn.disabled = false;
+
+            }, maxSpinTime * 1000 + 300);
+        }
+
+        async function resetLottery() {
+            if (!confirm("確定重置？")) return;
+            await fetch(API_URL, {
+                method: "POST",
+                body: JSON.stringify({ action: "reset" })
+            });
+            location.reload();
+        }
+
+        document.getElementById("drawBtn").addEventListener("click", drawLottery);
+        document.getElementById("resetBtn").addEventListener("click", resetLottery);
+
+        init();
+    </script>
+</body>
+</html>
