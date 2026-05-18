@@ -81,14 +81,18 @@
         display: flex;
         flex-wrap: wrap;
         justify-content: center;
-        gap: 15px; /* 縮小間距，確保能排滿 10 個 */
+        gap: 12px; 
+        /* 【關鍵修改】 (115px * 10個) + (12px * 9個間距) = 1258px */
+        /* 這樣設定可以強制第 11 個必定換行，完美達成一列最多 10 個 */
+        max-width: 1258px; 
+        margin: 0 auto;
     }
 
-    /* 單一滾輪設計 (修正高度誤差問題) */
+    /* 單一滾輪設計 */
     .reel {
-        width: 135px; 
-        height: 135px; 
-        box-sizing: content-box; /* 這是修復字體跑掉的關鍵！讓高度不受邊框影響 */
+        width: 115px; 
+        height: 115px; 
+        box-sizing: content-box; 
         overflow: hidden;
         border-radius: 12px;
         position: relative;
@@ -113,18 +117,18 @@
 
     .slot-name {
         width: 100%;
-        height: 135px; /* 必須與 .reel 高度完全一致 */
+        height: 115px; /* 必須與 .reel 高度完全一致 */
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 32px; 
+        font-size: 28px; 
         font-weight: 900;
         color: #111;
     }
 
     .slot-winner-name {
         color: #d10000; 
-        font-size: 42px; 
+        font-size: 38px; 
     }
 
     /* ================= 名單區 ================= */
@@ -221,8 +225,8 @@
     let winners = [];
     let currentPrizeIndex = 0;
 
-    // ★ 同步修改為 135，徹底解決字體歪掉的狀況
-    const SLOT_HEIGHT = 135; 
+    // ★ 這裡同步改為 115，確保字體對齊正中間
+    const SLOT_HEIGHT = 115; 
     const TOTAL_FAKE_NAMES = 30; 
 
     async function init() {
