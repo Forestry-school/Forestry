@@ -1,310 +1,61 @@
-body{
+/* ======================================= */
+/* 拉霸區 */
+/* ======================================= */
 
-    margin:0;
-
-    background:black;
-
-    color:white;
-
-    font-family:"Microsoft JhengHei";
-
-    overflow-x:hidden;
+#slotMachine {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
 }
 
-.container{
-
-    width:78%;
-
-    padding:30px;
-
-    text-align:center;
+.reel {
+    height: 140px;
+    overflow: hidden;
+    border-radius: 20px;
+    position: relative;
+    background: linear-gradient(to bottom, #222, #050505);
+    border: 2px solid rgba(255, 215, 0, 0.4);
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3), inset 0 0 12px rgba(255, 255, 255, 0.05);
 }
 
-.right-panel{
-
-    position:fixed;
-
-    right:0;
-
-    top:0;
-
-    width:22%;
-
-    height:100vh;
-
-    overflow:auto;
-
-    background:#111;
-
-    border-left:
-    2px solid gold;
-
-    padding:20px;
-}
-
-h1{
-
-    color:gold;
-
-    font-size:64px;
-
-    text-shadow:
-    0 0 20px gold;
-}
-
-.btn-group{
-    margin:30px 0;
-}
-
-button{
-
-    padding:18px 40px;
-
-    margin:0 10px;
-
-    border:none;
-
-    border-radius:18px;
-
-    font-size:24px;
-
-    font-weight:bold;
-
-    cursor:pointer;
-}
-
-#drawBtn{
-
-    background:gold;
-
-    color:black;
-}
-
-#resetBtn{
-
-    background:#ff004c;
-
-    color:white;
-}
-
-#currentPrize{
-
-    color:gold;
-
-    font-size:34px;
-
-    margin-bottom:40px;
-}
-
-////////////////////////////////////////////////////////
-/* 拉霸 */
-////////////////////////////////////////////////////////
-
-#slotMachine{
-
-    display:grid;
-
-    grid-template-columns:
-    repeat(auto-fit,minmax(160px,1fr));
-
-    gap:20px;
-}
-
-.reel{
-
-    height:140px;
-
-    overflow:hidden;
-
-    border-radius:20px;
-
-    position:relative;
-
-    background:
-    linear-gradient(
+.reel::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
         to bottom,
-        #222,
-        #050505
-    );
-
-    border:
-    2px solid rgba(255,215,0,0.4);
-
-    box-shadow:
-
-    0 0 10px rgba(255,215,0,0.3),
-
-    inset 0 0 12px rgba(255,255,255,0.05);
-}
-
-.reel::before{
-
-    content:"";
-
-    position:absolute;
-
-    top:0;
-
-    left:0;
-
-    width:100%;
-
-    height:100%;
-
-    background:
-
-    linear-gradient(
-
-        to bottom,
-
-        rgba(255,255,255,0.15),
-
+        rgba(0, 0, 0, 0.8) 0%,
         transparent 20%,
-
         transparent 80%,
-
-        rgba(255,255,255,0.12)
+        rgba(0, 0, 0, 0.8) 100%
     );
-
-    pointer-events:none;
+    z-index: 2; /* 加上漸層遮罩，讓上下邊緣有立體感 */
+    pointer-events: none;
 }
 
-.reel-inner{
-
-    display:flex;
-
-    flex-direction:column;
+.reel-inner {
+    display: flex;
+    flex-direction: column;
+    /* 這裡不需要預設 transition，我們在 JS 裡面動態加入 */
 }
 
-.slot-name{
-
-    height:140px;
-
-    display:flex;
-
-    align-items:center;
-
-    justify-content:center;
-
-    font-size:42px;
-
-    font-weight:bold;
-
-    color:#ffd700;
-
-    text-shadow:
-    0 0 10px rgba(255,215,0,0.5);
+.slot-name {
+    height: 140px; /* 確保每個名字高度一致，這對精準停靠很重要 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 42px;
+    font-weight: bold;
+    color: #ffd700;
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
 }
 
-////////////////////////////////////////////////////////
-/* 本輪得獎 */
-////////////////////////////////////////////////////////
-
-.winner-title{
-
-    color:gold;
-
-    margin-top:70px;
-
-    font-size:36px;
-}
-
-#winnerList{
-
-    display:flex;
-
-    flex-wrap:wrap;
-
-    justify-content:center;
-
-    gap:15px;
-
-    margin-top:30px;
-}
-
-.winner-item{
-
-    background:#111;
-
-    border:
-    2px solid rgba(255,215,0,0.4);
-
-    border-radius:16px;
-
-    padding:12px 22px;
-
-    color:gold;
-
-    font-size:28px;
-}
-
-////////////////////////////////////////////////////////
-/* 未中獎 */
-////////////////////////////////////////////////////////
-
-.remain-title{
-
-    color:#00e5ff;
-
-    margin-top:70px;
-
-    font-size:34px;
-}
-
-#remainList{
-
-    display:flex;
-
-    flex-wrap:wrap;
-
-    justify-content:center;
-
-    gap:10px;
-
-    margin-top:25px;
-}
-
-.remain-item{
-
-    padding:10px 16px;
-
-    background:#08131a;
-
-    border:
-    1px solid rgba(0,229,255,0.4);
-
-    border-radius:12px;
-
-    color:#00e5ff;
-}
-
-////////////////////////////////////////////////////////
-/* 右側 */
-////////////////////////////////////////////////////////
-
-.right-panel h2{
-
-    color:gold;
-}
-
-.allWinner{
-
-    padding:18px 0;
-
-    border-bottom:
-    1px solid rgba(255,255,255,0.08);
-}
-
-.prize-title{
-
-    color:gold;
-
-    font-size:24px;
-
-    margin-bottom:10px;
-}
-
-.prize-names{
-
-    line-height:1.8;
+/* 標記真正得獎者的特別樣式 (可選) */
+.slot-winner-name {
+    color: #00e5ff;
+    text-shadow: 0 0 15px #00e5ff;
 }
