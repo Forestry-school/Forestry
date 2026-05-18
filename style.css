@@ -143,6 +143,11 @@ button:hover{
     0 0 10px gold;
 }
 
+.winner-title{
+    color:gold;
+    margin-top:50px;
+}
+
 #winnerList{
 
     list-style:none;
@@ -150,34 +155,32 @@ button:hover{
     padding:0;
 
     margin-top:40px;
+
+    display:flex;
+
+    flex-wrap:wrap;
+
+    justify-content:center;
+
+    gap:15px;
 }
 
 #winnerList li{
 
-    font-size:30px;
+    background:#111;
 
-    margin:15px 0;
+    border:2px solid gold;
+
+    border-radius:15px;
+
+    padding:12px 20px;
+
+    font-size:28px;
 
     color:gold;
-}
 
-.allWinner{
-
-    border-bottom:
-    1px solid rgba(255,255,255,0.2);
-
-    padding:12px 0;
-
-    line-height:1.8;
-}
-
-.right h2{
-    color:gold;
-}
-
-.winner-title{
-    color:gold;
-    margin-top:50px;
+    box-shadow:
+    0 0 10px gold;
 }
 
 .remain-title{
@@ -213,4 +216,34 @@ button:hover{
     color:#00e5ff;
 
     font-size:20px;
+}
+
+.allWinner{
+
+    border-bottom:
+    1px solid rgba(255,255,255,0.2);
+
+    padding:18px 0;
+}
+
+.right h2{
+    color:gold;
+}
+
+.prize-title{
+
+    color:gold;
+
+    font-size:24px;
+
+    margin-bottom:10px;
+
+    font-weight:bold;
+}
+
+.prize-names{
+
+    line-height:1.8;
+
+    font-size:18px;
 }
