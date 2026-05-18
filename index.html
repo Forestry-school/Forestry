@@ -2,140 +2,16 @@
 <html lang="zh-Hant">
 
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>謝師宴摸彩系統</title>
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
 
-<style>
+<title>🎰 謝師宴摸彩系統</title>
 
-body{
-    margin:0;
-    background:#0d0d0d;
-    color:white;
-    font-family:Arial;
-}
+<link rel="stylesheet" href="style.css">
 
-.container{
-    display:flex;
-    min-height:100vh;
-}
-
-.center{
-    width:78%;
-    padding:30px;
-    text-align:center;
-}
-
-.right{
-    width:22%;
-    background:#1a1a1a;
-    padding:20px;
-    overflow:auto;
-}
-
-h1{
-    color:gold;
-    font-size:50px;
-    margin-bottom:20px;
-}
-
-button{
-
-    padding:15px 35px;
-
-    border:none;
-
-    border-radius:15px;
-
-    cursor:pointer;
-
-    font-size:22px;
-
-    font-weight:bold;
-
-    margin:15px;
-}
-
-#drawBtn{
-    background:gold;
-    color:black;
-}
-
-#resetBtn{
-    background:crimson;
-    color:white;
-}
-
-#slotContainer{
-
-    display:grid;
-
-    grid-template-columns:
-    repeat(auto-fit,minmax(180px,1fr));
-
-    gap:20px;
-
-    margin-top:40px;
-}
-
-.slot-card{
-
-    height:120px;
-
-    border:4px solid gold;
-
-    border-radius:20px;
-
-    background:black;
-
-    display:flex;
-
-    justify-content:center;
-
-    align-items:center;
-
-    color:gold;
-
-    font-size:30px;
-
-    font-weight:bold;
-
-    box-shadow:0 0 20px gold;
-
-    white-space:pre-line;
-
-    line-height:1.5;
-
-    padding:10px;
-
-    text-align:center;
-}
-
-#winnerList{
-
-    list-style:none;
-
-    padding:0;
-}
-
-#winnerList li{
-
-    font-size:28px;
-
-    margin:10px 0;
-
-    color:gold;
-}
-
-.allWinner{
-
-    border-bottom:1px solid rgba(255,255,255,0.2);
-
-    padding:10px 0;
-}
-
-</style>
 </head>
 
 <body>
@@ -145,7 +21,9 @@ button{
     <!-- 中間 -->
     <div class="center">
 
-        <h1>🎰 謝師宴摸彩 🎰</h1>
+        <h1>
+            🎰 謝師宴摸彩 🎰
+        </h1>
 
         <button id="drawBtn">
             開始抽獎
@@ -157,7 +35,9 @@ button{
 
         <div id="slotContainer"></div>
 
-        <h2>🏆 本輪得獎者</h2>
+        <h2 class="winner-title">
+            🏆 本輪得獎者
+        </h2>
 
         <ul id="winnerList"></ul>
 
@@ -173,6 +53,11 @@ button{
     </div>
 
 </div>
+
+<!-- 音效 -->
+<audio id="spinSound" preload="auto">
+    <source src="souce.m4a" type="audio/mp4">
+</audio>
 
 <script>
 
@@ -273,9 +158,11 @@ function renderAllWinners(){
 
                 <br>
 
-                ${w.name}
+                ${w.unit}
 
-                (${w.unit})
+                -
+
+                ${w.name}
 
             </div>
         `;
@@ -283,7 +170,7 @@ function renderAllWinners(){
 }
 
 ////////////////////////////////////////////////////////
-// 取得未中獎者
+// 未中獎名單
 ////////////////////////////////////////////////////////
 
 function getAvailablePeople(){
@@ -300,21 +187,35 @@ function getAvailablePeople(){
 // 顯示拉霸
 ////////////////////////////////////////////////////////
 
-function renderRollingSlots(names){
+function renderRollingSlots(people){
 
     const container =
     document.getElementById("slotContainer");
 
     container.innerHTML = "";
 
-    names.forEach(name=>{
+    people.forEach(person=>{
 
         const div =
         document.createElement("div");
 
         div.className = "slot-card";
 
-        div.innerText = name;
+        div.innerHTML = `
+
+            <div class="slot-inner">
+
+                <div class="slot-unit">
+                    ${person["單位"]}
+                </div>
+
+                <div class="slot-name">
+                    ${person["姓名"]}
+                </div>
+
+            </div>
+
+        `;
 
         container.appendChild(div);
     });
@@ -337,6 +238,19 @@ async function drawLottery(){
     }
 
     drawBtn.disabled = true;
+
+    //////////////////////////////////////////////////////
+    // 播放音效
+    //////////////////////////////////////////////////////
+
+    const spinSound =
+    document.getElementById("spinSound");
+
+    spinSound.currentTime = 0;
+
+    spinSound.play();
+
+    //////////////////////////////////////////////////////
 
     const prize =
     prizes[currentPrizeIndex];
@@ -367,7 +281,7 @@ async function drawLottery(){
 
         let tempPool = [...available];
 
-        let rollingNames = [];
+        let rollingPeople = [];
 
         for(let i=0;i<drawCount;i++){
 
@@ -376,26 +290,30 @@ async function drawLottery(){
                 Math.random() * tempPool.length
             );
 
-            rollingNames.push(
-                tempPool[randomIndex]["姓名"]
+            rollingPeople.push(
+                tempPool[randomIndex]
             );
 
             tempPool.splice(randomIndex,1);
         }
 
         renderRollingSlots(
-            rollingNames
+            rollingPeople
         );
 
     },80);
 
     //////////////////////////////////////////////////////
-    // 4秒後停止
+    // 5秒後停止
     //////////////////////////////////////////////////////
 
     setTimeout(async ()=>{
 
         clearInterval(rolling);
+
+        spinSound.pause();
+
+        spinSound.currentTime = 0;
 
         let temp = [...available];
 
@@ -417,19 +335,19 @@ async function drawLottery(){
         }
 
         //////////////////////////////////////////////////////
-        // 最終顯示
+        // 顯示最終得獎
         //////////////////////////////////////////////////////
 
-        const finalNames =
-        currentWinners.map(
-            w => `${w["姓名"]}\n${w["單位"]}`
-        );
-
-        renderRollingSlots(finalNames);
+        renderRollingSlots(currentWinners);
 
         //////////////////////////////////////////////////////
-        // 顯示本輪
+        // 本輪得獎者
         //////////////////////////////////////////////////////
+
+        const ul =
+        document.getElementById("winnerList");
+
+        ul.innerHTML = "";
 
         currentWinners.forEach(w=>{
 
@@ -437,11 +355,9 @@ async function drawLottery(){
             document.createElement("li");
 
             li.innerText =
-            `${w["姓名"]} (${w["單位"]})`;
+            `${w["單位"]} - ${w["姓名"]}`;
 
-            document
-            .getElementById("winnerList")
-            .appendChild(li);
+            ul.appendChild(li);
 
             winners.push({
 
@@ -475,17 +391,13 @@ async function drawLottery(){
 
         currentPrizeIndex++;
 
-        //////////////////////////////////////////////////////
-        // 停留畫面
-        //////////////////////////////////////////////////////
-
         setTimeout(()=>{
 
             drawBtn.disabled = false;
 
         },3000);
 
-    },4000);
+    },5000);
 }
 
 ////////////////////////////////////////////////////////
