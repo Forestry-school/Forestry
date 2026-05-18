@@ -29,9 +29,10 @@ h1{
     color:gold;
     font-size:60px;
     margin-bottom:30px;
+
     text-shadow:
     0 0 10px gold,
-    0 0 30px gold;
+    0 0 25px gold;
 }
 
 button{
@@ -110,11 +111,8 @@ button:hover{
     position:relative;
 
     box-shadow:
-    0 0 10px gold,
-    0 0 30px gold;
-
-    animation:
-    glow 1s infinite alternate;
+    0 0 20px gold,
+    0 0 40px gold;
 }
 
 .slot-inner{
@@ -146,20 +144,6 @@ button:hover{
     font-weight:bold;
 
     color:gold;
-}
-
-@keyframes glow{
-
-    from{
-        box-shadow:
-        0 0 10px gold;
-    }
-
-    to{
-        box-shadow:
-        0 0 30px gold,
-        0 0 60px gold;
-    }
 }
 
 #winnerList{
