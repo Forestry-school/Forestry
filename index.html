@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
+
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,7 +11,7 @@
 
 body{
     margin:0;
-    background:#111;
+    background:#0d0d0d;
     color:white;
     font-family:Arial;
 }
@@ -20,87 +21,110 @@ body{
     min-height:100vh;
 }
 
-.left,
-.right{
-    width:25%;
-    background:#1b1b1b;
-    padding:20px;
-    overflow:auto;
+.center{
+    width:78%;
+    padding:30px;
+    text-align:center;
 }
 
-.center{
-    flex:1;
-    text-align:center;
-    padding:30px;
+.right{
+    width:22%;
+    background:#1a1a1a;
+    padding:20px;
+    overflow:auto;
 }
 
 h1{
     color:gold;
     font-size:50px;
-}
-
-.slot{
-    width:80%;
-    height:150px;
-    margin:auto;
-    margin-top:50px;
-    border:5px solid gold;
-    border-radius:20px;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    background:black;
-    box-shadow:0 0 30px gold;
-}
-
-#rollingName{
-    font-size:55px;
-    color:gold;
-    font-weight:bold;
+    margin-bottom:20px;
 }
 
 button{
-    margin-top:30px;
-    padding:15px 40px;
+
+    padding:15px 35px;
+
     border:none;
+
     border-radius:15px;
-    background:gold;
-    color:black;
-    font-size:24px;
-    font-weight:bold;
+
     cursor:pointer;
+
+    font-size:22px;
+
+    font-weight:bold;
+
+    margin:15px;
 }
 
-button:hover{
-    transform:scale(1.05);
-}
-
-.prize-card{
-    border:2px solid gold;
-    border-radius:15px;
-    padding:15px;
-    margin-bottom:15px;
-}
-
-.active{
+#drawBtn{
     background:gold;
     color:black;
+}
+
+#resetBtn{
+    background:crimson;
+    color:white;
+}
+
+#slotContainer{
+
+    display:grid;
+
+    grid-template-columns:
+    repeat(auto-fit,minmax(180px,1fr));
+
+    gap:20px;
+
+    margin-top:40px;
+}
+
+.slot-card{
+
+    height:120px;
+
+    border:4px solid gold;
+
+    border-radius:20px;
+
+    background:black;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    color:gold;
+
+    font-size:36px;
+
+    font-weight:bold;
+
+    box-shadow:0 0 20px gold;
+}
+
+#winnerList{
+
+    list-style:none;
+
+    padding:0;
 }
 
 #winnerList li{
-    font-size:32px;
-    margin:15px;
+
+    font-size:28px;
+
+    margin:10px 0;
+
     color:gold;
 }
 
 .allWinner{
-    border-bottom:1px solid rgba(255,255,255,0.2);
-    padding:10px 0;
-}
 
-.resetBtn{
-    background:crimson;
-    color:white;
+    border-bottom:1px solid rgba(255,255,255,0.2);
+
+    padding:10px 0;
 }
 
 </style>
@@ -110,35 +134,20 @@ button:hover{
 
 <div class="container">
 
-    <!-- 左邊 -->
-    <div class="left">
-
-        <h2>🎁 獎項列表</h2>
-
-        <div id="prizeList"></div>
-
-    </div>
-
     <!-- 中間 -->
     <div class="center">
 
         <h1>🎰 謝師宴摸彩 🎰</h1>
 
-        <div class="slot">
-            <div id="rollingName">
-                準備開始抽獎
-            </div>
-        </div>
-
         <button id="drawBtn">
             開始抽獎
         </button>
 
-        <br>
-
-        <button class="resetBtn" id="resetBtn">
+        <button id="resetBtn">
             重置所有抽獎
         </button>
+
+        <div id="slotContainer"></div>
 
         <h2>🏆 本輪得獎者</h2>
 
@@ -160,13 +169,11 @@ button:hover{
 <script>
 
 ////////////////////////////////////////////////////////
-// Google Apps Script API
+// API
 ////////////////////////////////////////////////////////
+
 const API_URL =
 'https://script.google.com/macros/s/AKfycbyDm_9tAXT6vwCmqkpnLfecoukALyiVIRxkY5QubO3X8EMbbqIMmHnsG7p0AZza3q8/exec';
-    
-//const API_URL =
-//'https://script.google.com/macros/s/你的網址/exec';
 
 ////////////////////////////////////////////////////////
 
@@ -175,15 +182,6 @@ let prizes = [];
 let winners = [];
 
 let currentPrizeIndex = 0;
-
-const rollingName =
-document.getElementById("rollingName");
-
-const drawBtn =
-document.getElementById("drawBtn");
-
-const winnerList =
-document.getElementById("winnerList");
 
 ////////////////////////////////////////////////////////
 // 初始化
@@ -198,32 +196,32 @@ async function init(){
     await response.json();
 
     people = data.people;
+
     prizes = data.prizes;
+
     winners = data.winners;
 
-    renderPrizeList();
+    findCurrentPrize();
 
     renderAllWinners();
-
-    findCurrentPrize();
 }
 
 ////////////////////////////////////////////////////////
-// 找到目前抽到哪個獎項
+// 找目前獎項
 ////////////////////////////////////////////////////////
 
 function findCurrentPrize(){
 
-    let prizeCounter = {};
+    let counter = {};
 
     winners.forEach(w=>{
 
-        if(!prizeCounter[w.prize]){
+        if(!counter[w.prize]){
 
-            prizeCounter[w.prize] = 0;
+            counter[w.prize] = 0;
         }
 
-        prizeCounter[w.prize]++;
+        counter[w.prize]++;
     });
 
     for(let i=0;i<prizes.length;i++){
@@ -231,53 +229,19 @@ function findCurrentPrize(){
         const prizeName =
         prizes[i]["獎項"];
 
-        const prizeCount =
+        const total =
         parseInt(prizes[i]["人數"]);
 
-        const currentCount =
-        prizeCounter[prizeName] || 0;
+        const current =
+        counter[prizeName] || 0;
 
-        if(currentCount < prizeCount){
+        if(current < total){
 
             currentPrizeIndex = i;
 
             break;
         }
     }
-
-    renderPrizeList();
-}
-
-////////////////////////////////////////////////////////
-// 顯示獎項
-////////////////////////////////////////////////////////
-
-function renderPrizeList(){
-
-    const div =
-    document.getElementById("prizeList");
-
-    div.innerHTML = "";
-
-    prizes.forEach((prize,index)=>{
-
-        const card =
-        document.createElement("div");
-
-        card.className = "prize-card";
-
-        if(index === currentPrizeIndex){
-
-            card.classList.add("active");
-        }
-
-        card.innerHTML = `
-            <h3>${prize["獎項"]}</h3>
-            <p>${prize["人數"]} 人</p>
-        `;
-
-        div.appendChild(card);
-    });
 }
 
 ////////////////////////////////////////////////////////
@@ -294,17 +258,24 @@ function renderAllWinners(){
     winners.forEach(w=>{
 
         div.innerHTML += `
+
             <div class="allWinner">
+
                 🎉 ${w.prize}
+
                 <br>
-                ${w.name} (${w.unit})
+
+                ${w.name}
+
+                (${w.unit})
+
             </div>
         `;
     });
 }
 
 ////////////////////////////////////////////////////////
-// 取得未中獎名單
+// 取得未中獎者
 ////////////////////////////////////////////////////////
 
 function getAvailablePeople(){
@@ -318,10 +289,37 @@ function getAvailablePeople(){
 }
 
 ////////////////////////////////////////////////////////
+// 顯示拉霸
+////////////////////////////////////////////////////////
+
+function renderRollingSlots(names){
+
+    const container =
+    document.getElementById("slotContainer");
+
+    container.innerHTML = "";
+
+    names.forEach(name=>{
+
+        const div =
+        document.createElement("div");
+
+        div.className = "slot-card";
+
+        div.innerText = name;
+
+        container.appendChild(div);
+    });
+}
+
+////////////////////////////////////////////////////////
 // 抽獎
 ////////////////////////////////////////////////////////
 
 async function drawLottery(){
+
+    const drawBtn =
+    document.getElementById("drawBtn");
 
     if(currentPrizeIndex >= prizes.length){
 
@@ -331,8 +329,6 @@ async function drawLottery(){
     }
 
     drawBtn.disabled = true;
-
-    winnerList.innerHTML = "";
 
     const prize =
     prizes[currentPrizeIndex];
@@ -355,27 +351,39 @@ async function drawLottery(){
         return;
     }
 
-    ////////////////////////////////////////////////////////
-    // 跑馬燈
-    ////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////
+    // 跑動動畫
+    //////////////////////////////////////////////////////
 
     let rolling = setInterval(()=>{
 
-        const random =
-        available[
-            Math.floor(
-                Math.random() * available.length
-            )
-        ];
+        let tempPool = [...available];
 
-        rollingName.innerText =
-        `${random["姓名"]}`;
+        let rollingNames = [];
+
+        for(let i=0;i<drawCount;i++){
+
+            const randomIndex =
+            Math.floor(
+                Math.random() * tempPool.length
+            );
+
+            rollingNames.push(
+                tempPool[randomIndex]["姓名"]
+            );
+
+            tempPool.splice(randomIndex,1);
+        }
+
+        renderRollingSlots(
+            rollingNames
+        );
 
     },80);
 
-    ////////////////////////////////////////////////////////
-    // 4秒後停止
-    ////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////
+    // 停止
+    //////////////////////////////////////////////////////
 
     setTimeout(async ()=>{
 
@@ -400,12 +408,25 @@ async function drawLottery(){
             temp.splice(randomIndex,1);
         }
 
-        rollingName.innerText =
-        "🎉 恭喜得獎 🎉";
+        //////////////////////////////////////////////////////
+        // 顯示最終得獎者
+        //////////////////////////////////////////////////////
 
-        ////////////////////////////////////////////////////////
-        // 顯示本輪得獎
-        ////////////////////////////////////////////////////////
+        const finalNames =
+        currentWinners.map(
+            w => `${w["姓名"]}`
+        );
+
+        renderRollingSlots(finalNames);
+
+        //////////////////////////////////////////////////////
+        // 顯示本輪
+        //////////////////////////////////////////////////////
+
+        const ul =
+        document.getElementById("winnerList");
+
+        ul.innerHTML = "";
 
         currentWinners.forEach(w=>{
 
@@ -415,18 +436,21 @@ async function drawLottery(){
             li.innerText =
             `${w["姓名"]} (${w["單位"]})`;
 
-            winnerList.appendChild(li);
+            ul.appendChild(li);
 
             winners.push({
+
                 prize:prizeName,
+
                 unit:w["單位"],
+
                 name:w["姓名"]
             });
         });
 
-        ////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////
         // 寫回 Google Sheet
-        ////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////
 
         await fetch(API_URL,{
 
@@ -440,13 +464,11 @@ async function drawLottery(){
             })
         });
 
-        ////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////
 
         renderAllWinners();
 
         currentPrizeIndex++;
-
-        renderPrizeList();
 
         drawBtn.disabled = false;
 
@@ -454,12 +476,12 @@ async function drawLottery(){
 }
 
 ////////////////////////////////////////////////////////
-// 重置所有抽獎
+// 重置
 ////////////////////////////////////////////////////////
 
 async function resetLottery(){
 
-    if(!confirm("確定要清空所有得獎資料嗎？")){
+    if(!confirm("確定要重置嗎？")){
 
         return;
     }
@@ -474,19 +496,20 @@ async function resetLottery(){
         })
     });
 
-    alert("已重置");
-
     location.reload();
 }
 
 ////////////////////////////////////////////////////////
 
-drawBtn.addEventListener(
+document
+.getElementById("drawBtn")
+.addEventListener(
     "click",
     drawLottery
 );
 
-document.getElementById("resetBtn")
+document
+.getElementById("resetBtn")
 .addEventListener(
     "click",
     resetLottery
