@@ -25,7 +25,7 @@
         display: flex;
         flex-direction: column;
         align-items: center;
-        margin-right: 20%; /* 保留給右邊得獎名單的空間 */
+        margin-right: 22%; /* 留給右邊面板，稍微加寬避免干擾 */
         min-width: 0;
     }
 
@@ -81,23 +81,22 @@
         display: flex;
         flex-wrap: wrap;
         justify-content: center;
-        gap: 12px; 
-        /* 【關鍵修正】這就是 10 個一排的密碼！ 
-           10個滾輪 (含邊框96px) + 9個間距 (12px) = 1068px */
-        max-width: 1068px; 
+        gap: 10px; /* 縮小間距 */
+        /* 【絕對密碼】10個方塊(84px) + 9個間距(10px) = 930px，設定 940px 絕對安全 */
+        max-width: 940px; 
         margin: 0 auto;
     }
 
     /* 單一滾輪設計 */
     .reel {
-        width: 90px; 
-        height: 90px; 
-        box-sizing: content-box; /* 確保邊框是往外長，90+3+3 = 96px */
+        width: 80px;  /* 縮小寬度以適應所有螢幕 */
+        height: 80px; /* 縮小高度 */
+        box-sizing: content-box; 
         overflow: hidden;
-        border-radius: 10px;
+        border-radius: 8px;
         position: relative;
         background: linear-gradient(to bottom, #f9f9f9, #d9d9d9);
-        border: 3px solid #000;
+        border: 2px solid #000; /* 邊框也改細一點 */
         box-shadow: 0 0 10px rgba(0,0,0,0.5);
     }
     
@@ -117,18 +116,18 @@
 
     .slot-name {
         width: 100%;
-        height: 90px; /* 必須與 .reel 高度完全一致 */
+        height: 80px; /* 必須與 .reel 高度完全一致 */
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 24px; 
+        font-size: 22px; /* 字體稍微縮小配合方塊 */
         font-weight: 900;
         color: #111;
     }
 
     .slot-winner-name {
         color: #d10000; 
-        font-size: 32px; 
+        font-size: 28px; /* 中獎人字體稍大 */
     }
 
     /* ================= 名單區 ================= */
@@ -225,8 +224,8 @@
     let winners = [];
     let currentPrizeIndex = 0;
 
-    // ★ 同步改為 90，對應新的 CSS 尺寸
-    const SLOT_HEIGHT = 90; 
+    // ★ 同步改為 80，對應新的 CSS 尺寸，字體才會停在正中間
+    const SLOT_HEIGHT = 80; 
     const TOTAL_FAKE_NAMES = 30; 
 
     async function init() {
