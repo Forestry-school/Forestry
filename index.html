@@ -3,243 +3,244 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>🎰 福瑞斯特謝師感恩餐會 - 翠綠標題質感版</title>
+<title>🎰 福瑞斯特謝師感恩餐會 - 翠綠標題質感版 (亮橘得獎)</title>
 <style>
-    /* ================= 基本設定 ================= */
-    * { box-sizing: border-box; }
-    body {
-        margin: 0; padding: 0;
-        background: #050505; color: #e0e0e0;
-        font-family: "Microsoft JhengHei", sans-serif;
-        display: flex; height: 100vh; overflow: hidden;
-    }
-    
-    /* ================= 左側：主拉霸區 (80%) ================= */
-    .left-panel {
-        flex: 0 0 80%;
-        display: flex; flex-direction: column; align-items: center;
-        padding: 20px; border-right: 2px solid #1a1a1a;
-    }
+    /* ================= 基本設定 ================= */
+    * { box-sizing: border-box; }
+    body {
+        margin: 0; padding: 0;
+        background: #050505; color: #e0e0e0;
+        font-family: "Microsoft JhengHei", sans-serif;
+        display: flex; height: 100vh; overflow: hidden;
+    }
+    
+    /* ================= 左側：主拉霸區 (80%) ================= */
+    .left-panel {
+        flex: 0 0 80%;
+        display: flex; flex-direction: column; align-items: center;
+        padding: 20px; border-right: 2px solid #1a1a1a;
+    }
 
-    /* 【標題】修正為翠綠色，帶有森林微光 */
-    h1 {
-        color: #2ecc71; 
-        font-size: 45px; margin: 0 0 15px 0;
-        text-shadow: 0 0 20px rgba(46, 204, 113, 0.5); 
-        letter-spacing: 8px;
-    }
+    /* 【標題】修正為翠綠色，帶有森林微光 */
+    h1 {
+        color: #2ecc71; 
+        font-size: 45px; margin: 0 0 15px 0;
+        text-shadow: 0 0 20px rgba(46, 204, 113, 0.5); 
+        letter-spacing: 8px;
+    }
 
-    /* 頂部併排控制列 */
-    .control-bar {
-        display: flex; align-items: center; justify-content: center;
-        gap: 20px; width: 100%; margin-bottom: 25px;
-        background: rgba(255, 255, 255, 0.03);
-        padding: 15px; border-radius: 15px;
-        border: 1px solid #222;
-    }
+    /* 頂部併排控制列 */
+    .control-bar {
+        display: flex; align-items: center; justify-content: center;
+        gap: 20px; width: 100%; margin-bottom: 25px;
+        background: rgba(255, 255, 255, 0.03);
+        padding: 15px; border-radius: 15px;
+        border: 1px solid #222;
+    }
 
-    #nextPrizeBtn {
-        background: #0077b6; color: #fff; border: none; 
-        padding: 12px 25px; border-radius: 10px; font-size: 18px; 
-        font-weight: bold; cursor: pointer; transition: 0.2s;
-    }
-    #nextPrizeBtn:hover:not(:disabled) { background: #0096c7; transform: scale(1.05); }
-    #nextPrizeBtn:disabled { background: #222; color: #555; }
+    #nextPrizeBtn {
+        background: #0077b6; color: #fff; border: none; 
+        padding: 12px 25px; border-radius: 10px; font-size: 18px; 
+        font-weight: bold; cursor: pointer; transition: 0.2s;
+    }
+    #nextPrizeBtn:hover:not(:disabled) { background: #0096c7; transform: scale(1.05); }
+    #nextPrizeBtn:disabled { background: #222; color: #555; }
 
-    /* 目前獎項顯示：亮黃框 */
-    #currentPrize {
-        color: #ffff00; font-size: 28px; font-weight: bold;
-        background: rgba(0, 0, 0, 0.6); padding: 10px 40px;
-        border-radius: 50px; border: 2px solid #ffff00;
-        min-width: 380px; text-align: center;
-        box-shadow: 0 0 15px rgba(255, 255, 0, 0.2);
-    }
+    /* 目前獎項顯示：亮黃框 */
+    #currentPrize {
+        color: #ffff00; font-size: 28px; font-weight: bold;
+        background: rgba(0, 0, 0, 0.6); padding: 10px 40px;
+        border-radius: 50px; border: 2px solid #ffff00;
+        min-width: 380px; text-align: center;
+        box-shadow: 0 0 15px rgba(255, 255, 0, 0.2);
+    }
 
-    #drawBtn {
-        padding: 12px 50px; border: none; border-radius: 10px;
-        font-size: 24px; font-weight: bold; cursor: pointer; transition: 0.2s;
-        background: linear-gradient(135deg, #ffff00, #ffcc00); color: #000;
-    }
-    #drawBtn:hover:not(:disabled) { transform: scale(1.05); box-shadow: 0 0 30px rgba(255, 255, 0, 0.4); }
+    #drawBtn {
+        padding: 12px 50px; border: none; border-radius: 10px;
+        font-size: 24px; font-weight: bold; cursor: pointer; transition: 0.2s;
+        background: linear-gradient(135deg, #ffff00, #ffcc00); color: #000;
+    }
+    #drawBtn:hover:not(:disabled) { transform: scale(1.05); box-shadow: 0 0 30px rgba(255, 255, 0, 0.4); }
 
-    /* 拉霸容器 */
-    .slot-machine-container {
-        width: 100%; padding: 25px;
-        background: #0f0f0f; border-radius: 20px; border: 4px solid #222;
-        box-shadow: inset 0 0 50px #000;
-    }
+    /* 拉霸容器 */
+    .slot-machine-container {
+        width: 100%; padding: 25px;
+        background: #0f0f0f; border-radius: 20px; border: 4px solid #222;
+        box-shadow: inset 0 0 50px #000;
+    }
 
-    #slotMachine { display: grid; grid-template-columns: repeat(5, 1fr); gap: 15px; }
+    #slotMachine { display: grid; grid-template-columns: repeat(5, 1fr); gap: 15px; }
 
-    /* 滾輪底色：深灰漸層 */
-    .reel {
-        height: 175px; overflow: hidden; border-radius: 10px; position: relative;
-        background: linear-gradient(to bottom, #1a1a1a 0%, #2a2a2a 50%, #1a1a1a 100%);
-        border: 2px solid #333;
-    }
-    
-    .reel::after {
-        content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-        background: linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, transparent 40%, transparent 60%, rgba(0,0,0,0.7) 100%);
-        pointer-events: none; z-index: 2;
-    }
+    /* 滾輪底色：深灰漸層 */
+    .reel {
+        height: 175px; overflow: hidden; border-radius: 10px; position: relative;
+        background: linear-gradient(to bottom, #1a1a1a 0%, #2a2a2a 50%, #1a1a1a 100%);
+        border: 2px solid #333;
+    }
+    
+    .reel::after {
+        content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+        background: linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, transparent 40%, transparent 60%, rgba(0,0,0,0.7) 100%);
+        pointer-events: none; z-index: 2;
+    }
 
-    .reel-inner { display: flex; flex-direction: column; }
-    .slot-name {
-        width: 100%; height: 175px; display: flex; align-items: center;
-        justify-content: center; text-align: center; 
-        font-size: 38px; font-weight: 500; color: #555;
-    }
+    .reel-inner { display: flex; flex-direction: column; }
+    .slot-name {
+        width: 100%; height: 175px; display: flex; align-items: center;
+        justify-content: center; text-align: center; 
+        font-size: 38px; font-weight: 500; color: #555;
+    }
 
-    /* 得獎者文字：亮橘色大字 (已從金色修改) */
-    .slot-winner-name { 
-        color: #FF8C00; /* 修改這裡：亮橘色 */
-        font-size: 56px; 
-        font-weight: 900;
-        text-shadow: 0 0 15px #FF8C00, 0 0 30px rgba(255, 140, 0, 0.5); /* 同步修改發光顏色 */
-    }
+    /* 得獎者文字：亮橘色大字 (已從金色修改) */
+    .slot-winner-name { 
+        color: #FF8C00; /* 修改這裡：金色改為亮橘色 #FF8C00 */
+        font-size: 56px; 
+        font-weight: 900;
+        text-shadow: 0 0 15px #FF8C00, 0 0 30px rgba(255, 140, 0, 0.5); /* 同步修改發光顏色 */
+    }
 
-    /* ================= 右側：榮譽榜 (20%) ================= */
-    .right-panel { flex: 0 0 20%; background: #080808; padding: 20px; overflow-y: auto; }
-    .right-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #ffff00; padding-bottom: 10px; margin-bottom: 20px; }
-    .right-panel h2 { color: #ffff00; font-size: 22px; margin: 0; }
-    #resetBtn { background: #222; color: #666; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-size: 11px; }
+    /* ================= 右側：榮譽榜 (20%) ================= */
+    .right-panel { flex: 0 0 20%; background: #080808; padding: 20px; overflow-y: auto; }
+    .right-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #ffff00; padding-bottom: 10px; margin-bottom: 20px; }
+    .right-panel h2 { color: #ffff00; font-size: 22px; margin: 0; }
+    #resetBtn { background: #222; color: #666; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-size: 11px; }
 
-    .allWinner { padding: 10px 0; border-bottom: 1px solid #1a1a1a; }
-    .prize-title { color: #ffff00; font-size: 18px; font-weight: bold; }
-    .prize-names { color: #aaa; font-size: 15px; margin-top: 5px; line-height: 1.4; }
+    .allWinner { padding: 10px 0; border-bottom: 1px solid #1a1a1a; }
+    .prize-title { color: #ffff00; font-size: 18px; font-weight: bold; }
+    .prize-names { color: #aaa; font-size: 15px; margin-top: 5px; line-height: 1.4; }
 
 </style>
 </head>
 <body>
 
-    <div class="left-panel">
-        <h1>🎰 福瑞斯特謝師感恩餐會</h1>
-        
-        <div class="control-bar">
-            <button id="nextPrizeBtn" disabled>載入名單中...</button>
-            <div id="currentPrize">請先點擊鎖定獎項</div>
-            <button id="drawBtn" disabled>等待開獎</button>
-        </div>
+    <div class="left-panel">
+        <h1>🎰 福瑞斯特謝師感恩餐會</h1>
+        
+        <div class="control-bar">
+            <button id="nextPrizeBtn" disabled>載入名單中...</button>
+            <div id="currentPrize">請先點擊鎖定獎項</div>
+            <button id="drawBtn" disabled>等待開獎</button>
+        </div>
 
-        <div class="slot-machine-container">
-            <div id="slotMachine"></div>
-        </div>
-    </div>
+        <div class="slot-machine-container">
+            <div id="slotMachine"></div>
+        </div>
+    </div>
 
-    <div class="right-panel">
-        <div class="right-header">
-            <h2>📜 榮譽得獎榜</h2>
-            <button id="resetBtn">🔄 重置</button>
-        </div>
-        <div id="allWinnerList"></div>
-    </div>
+    <div class="right-panel">
+        <div class="right-header">
+            <h2>📜 榮譽得獎榜</h2>
+            <button id="resetBtn">🔄 重置</button>
+        </div>
+        <div id="allWinnerList"></div>
+    </div>
 
-    <audio id="spinSound" preload="auto">
-        <source src="souce.m4a" type="audio/mp4">
-    </audio>
+    <audio id="spinSound" preload="auto">
+        <source src="souce.m4a" type="audio/mp4">
+    </audio>
 
 <script>
-    const API_URL = 'https://script.google.com/macros/s/AKfycbyDm_9tAXT6vwCmqkpnLfecoukALyiVIRxkY5QubO3X8EMbbqIMmHnsG7p0AZza3q8/exec';
-    let people = []; let prizes = []; let winners = []; let currentPrizeIndex = -1;
-    const SLOT_HEIGHT = 175; const TOTAL_FAKE_NAMES = 65; 
+    const API_URL = 'https://script.google.com/macros/s/AKfycbyDm_9tAXT6vwCmqkpnLfecoukALyiVIRxkY5QubO3X8EMbbqIMmHnsG7p0AZza3q8/exec';
+    let people = []; let prizes = []; let winners = []; let currentPrizeIndex = -1;
+    const SLOT_HEIGHT = 175; const TOTAL_FAKE_NAMES = 65; 
 
-    async function init() {
-        try {
-            const response = await fetch(API_URL);
-            const data = await response.json();
-            people = data.people; prizes = data.prizes; winners = data.winners;
-            document.getElementById("nextPrizeBtn").disabled = false;
-            document.getElementById("nextPrizeBtn").innerText = "🔍 鎖定下個獎項";
-            renderAllWinners();
-        } catch (e) { document.getElementById("currentPrize").innerText = "❌ 連線失敗"; }
-    }
+    async function init() {
+        try {
+            const response = await fetch(API_URL);
+            const data = await response.json();
+            people = data.people; prizes = data.prizes; winners = data.winners;
+            document.getElementById("nextPrizeBtn").disabled = false;
+            document.getElementById("nextPrizeBtn").innerText = "🔍 鎖定下個獎項";
+            renderAllWinners();
+        } catch (e) { document.getElementById("currentPrize").innerText = "❌ 連線失敗"; }
+    }
 
-    function renderAllWinners() {
-        const div = document.getElementById("allWinnerList"); div.innerHTML = "";
-        let grouped = {};
-        winners.forEach(w => { if (!grouped[w.prize]) grouped[w.prize] = []; grouped[w.prize].push(w.name); });
-        Object.keys(grouped).forEach(prize => {
-            div.innerHTML += `<div class="allWinner"><div class="prize-title">🎉 ${prize}</div><div class="prize-names">${grouped[prize].join("、")}</div></div>`;
-        });
-    }
+    function renderAllWinners() {
+        const div = document.getElementById("allWinnerList"); div.innerHTML = "";
+        let grouped = {};
+        winners.forEach(w => { if (!grouped[w.prize]) grouped[w.prize] = []; grouped[w.prize].push(w.name); });
+        Object.keys(grouped).forEach(prize => {
+            div.innerHTML += `<div class="allWinner"><div class="prize-title">🎉 ${prize}</div><div class="prize-names">${grouped[prize].join("、")}</div></div>`;
+        });
+    }
 
-    function prepareNextPrize() {
-        let counter = {}; winners.forEach(w => { if (!counter[w.prize]) counter[w.prize] = 0; counter[w.prize]++; });
-        let found = false;
-        for (let i = 0; i < prizes.length; i++) {
-            if ((counter[prizes[i]["獎項"]] || 0) < parseInt(prizes[i]["人數"])) { currentPrizeIndex = i; found = true; break; }
-        }
-        if (found) {
-            const prize = prizes[currentPrizeIndex];
-            document.getElementById("currentPrize").innerText = `🎁 ${prize["獎項"]} (${prize["人數"]}人)`;
-            document.getElementById("drawBtn").disabled = false;
-            document.getElementById("drawBtn").innerText = "🎰 開始抽獎";
-            document.getElementById("nextPrizeBtn").disabled = true;
-            document.getElementById("slotMachine").innerHTML = ""; 
-        } else { document.getElementById("currentPrize").innerText = "🎊 抽獎圓滿結束"; }
-    }
+    function prepareNextPrize() {
+        let counter = {}; winners.forEach(w => { if (!counter[w.prize]) counter[w.prize] = 0; counter[w.prize]++; });
+        let found = false;
+        for (let i = 0; i < prizes.length; i++) {
+            if ((counter[prizes[i]["獎項"]] || 0) < parseInt(prizes[i]["人數"])) { currentPrizeIndex = i; found = true; break; }
+        }
+        if (found) {
+            const prize = prizes[currentPrizeIndex];
+            document.getElementById("currentPrize").innerText = `🎁 ${prize["獎項"]} (${prize["人數"]}人)`;
+            document.getElementById("drawBtn").disabled = false;
+            document.getElementById("drawBtn").innerText = "🎰 開始抽獎";
+            document.getElementById("nextPrizeBtn").disabled = true;
+            document.getElementById("slotMachine").innerHTML = ""; 
+        } else { document.getElementById("currentPrize").innerText = "🎊 抽獎圓滿結束"; }
+    }
 
-    function createSlot(nameList, winnerData) {
-        const reel = document.createElement("div"); reel.className = "reel";
-        const inner = document.createElement("div"); inner.className = "reel-inner";
-        for (let i = 0; i < TOTAL_FAKE_NAMES; i++) {
-            const r = nameList[Math.floor(Math.random() * nameList.length)];
-            inner.innerHTML += `<div class="slot-name">${r ? r["姓名"] : "---"}</div>`;
-        }
-        inner.innerHTML += `<div class="slot-name slot-winner-name">${winnerData["姓名"]}</div>`;
-        for (let i = 0; i < 3; i++) {
-            const r = nameList[Math.floor(Math.random() * nameList.length)];
-            inner.innerHTML += `<div class="slot-name">${r ? r["姓名"] : "---"}</div>`;
-        }
-        reel.appendChild(inner); return { reel, inner };
-    }
+    function createSlot(nameList, winnerData) {
+        const reel = document.createElement("div"); reel.className = "reel";
+        const inner = document.createElement("div"); inner.className = "reel-inner";
+        for (let i = 0; i < TOTAL_FAKE_NAMES; i++) {
+            const r = nameList[Math.floor(Math.random() * nameList.length)];
+            inner.innerHTML += `<div class="slot-name">${r ? r["姓名"] : "---"}</div>`;
+        }
+        inner.innerHTML += `<div class="slot-name slot-winner-name">${winnerData["姓名"]}</div>`;
+        for (let i = 0; i < 3; i++) {
+            const r = nameList[Math.floor(Math.random() * nameList.length)];
+            inner.innerHTML += `<div class="slot-name">${r ? r["姓名"] : "---"}</div>`;
+        }
+        reel.appendChild(inner); return { reel, inner };
+    }
 
-    async function drawLottery() {
-        const spinSound = document.getElementById("spinSound");
-        const drawBtn = document.getElementById("drawBtn");
-        drawBtn.disabled = true; drawBtn.innerText = "🚀 開獎中...";
-        const prize = prizes[currentPrizeIndex];
-        const winnerNames = winners.map(w => w.name);
-        const available = people.filter(p => !winnerNames.includes(p["姓名"]));
-        const drawCount = Math.min(parseInt(prize["人數"]), available.length);
-        spinSound.currentTime = 0; spinSound.play();
-        let currentWinners = []; let temp = [...available];
-        for (let i = 0; i < drawCount; i++) {
-            const idx = Math.floor(Math.random() * temp.length);
-            currentWinners.push(temp[idx]); temp.splice(idx, 1);
-        }
-        const machine = document.getElementById("slotMachine"); machine.innerHTML = "";
-        let slots = [];
-        for (let i = 0; i < drawCount; i++) {
-            const slot = createSlot(available, currentWinners[i]);
-            machine.appendChild(slot.reel); slots.push(slot);
-        }
-        void machine.offsetWidth; 
-        const targetY = -(TOTAL_FAKE_NAMES * SLOT_HEIGHT);
-        slots.forEach(slot => {
-            slot.inner.style.transition = `transform 8s cubic-bezier(0.1, 0, 0.1, 1)`;
-            slot.inner.style.transform = `translateY(${targetY}px)`;
-        });
-        setTimeout(async () => {
-            spinSound.pause(); spinSound.currentTime = 0; // 精準停音
-            currentWinners.forEach(w => winners.push({ prize: prize["獎項"], name: w["姓名"] }));
-            renderAllWinners();
-            fetch(API_URL, { method: "POST", body: JSON.stringify({ prize: prize["獎項"], winners: currentWinners }) });
-            document.getElementById("nextPrizeBtn").disabled = false;
-            drawBtn.innerText = "本輪開獎完成";
-        }, 8000); 
-    }
+    async function drawLottery() {
+        const spinSound = document.getElementById("spinSound");
+        const drawBtn = document.getElementById("drawBtn");
+        drawBtn.disabled = true; drawBtn.innerText = "🚀 開獎中...";
+        const prize = prizes[currentPrizeIndex];
+        const winnerNames = winners.map(w => w.name);
+        const available = people.filter(p => !winnerNames.includes(p["姓名"]));
+        const drawCount = Math.min(parseInt(prize["人數"]), available.length);
+        spinSound.currentTime = 0; spinSound.play();
+        let currentWinners = []; let temp = [...available];
+        for (let i = 0; i < drawCount; i++) {
+            const idx = Math.floor(Math.random() * temp.length);
+            currentWinners.push(temp[idx]); temp.splice(idx, 1);
+        }
+        const machine = document.getElementById("slotMachine"); machine.innerHTML = "";
+        let slots = [];
+        for (let i = 0; i < drawCount; i++) {
+            const slot = createSlot(available, currentWinners[i]);
+            machine.appendChild(slot.reel); slots.push(slot);
+        }
+        void machine.offsetWidth; 
+        const targetY = -(TOTAL_FAKE_NAMES * SLOT_HEIGHT);
+        slots.forEach(slot => {
+            slot.inner.style.transition = `transform 8s cubic-bezier(0.1, 0, 0.1, 1)`;
+            slot.inner.style.transform = `translateY(${targetY}px)`;
+        });
+        setTimeout(async () => {
+            spinSound.pause(); spinSound.currentTime = 0; // 精準停音
+            currentWinners.forEach(w => winners.push({ prize: prize["獎項"], name: w["姓名"] }));
+            renderAllWinners();
+            fetch(API_URL, { method: "POST", body: JSON.stringify({ prize: prize["獎項"], winners: currentWinners }) });
+            document.getElementById("nextPrizeBtn").disabled = false;
+            drawBtn.innerText = "本輪開獎完成";
+        }, 8000); 
+    }
 
-    document.getElementById("nextPrizeBtn").addEventListener("click", prepareNextPrize);
-    document.getElementById("drawBtn").addEventListener("click", drawLottery);
-    document.getElementById("resetBtn").addEventListener("click", async () => {
-        if(confirm("確定要重置所有紀錄嗎？")) {
-            await fetch(API_URL, { method: "POST", body: JSON.stringify({ action: "reset" }) });
-            location.reload();
-        }
-    });
-    init();
+    document.getElementById("nextPrizeBtn").addEventListener("click", prepareNextPrize);
+    document.getElementById("drawBtn").addEventListener("click", drawLottery);
+    document.getElementById("resetBtn").addEventListener("click", async () => {
+        if(confirm("確定要重置所有紀錄嗎？")) {
+            await fetch(API_URL, { method: "POST", body: JSON.stringify({ action: "reset" }) });
+            location.reload();
+        }
+    });
+    init();
 </script>
 </body>
 </html>
+```http://googleusercontent.com/image_generation_content/185
