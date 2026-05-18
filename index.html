@@ -33,7 +33,7 @@ content="width=device-width, initial-scale=1.0">
             重置所有抽獎
         </button>
 
-        <!-- 目前獎項 -->
+        <!-- 目前抽的獎項 -->
         <div id="currentPrize"></div>
 
         <!-- 拉霸 -->
@@ -307,10 +307,14 @@ async function drawLottery(){
     }
 
     //////////////////////////////////////////////////////
-    // 跑動名字
+    // 開始跑名字
     //////////////////////////////////////////////////////
 
-    let rolling = setInterval(()=>{
+    let rolling = true;
+
+    const rollingInterval = setInterval(()=>{
+
+        if(!rolling) return;
 
         let tempPool = [...available];
 
@@ -342,14 +346,24 @@ async function drawLottery(){
 
     setTimeout(async ()=>{
 
-        clearInterval(rolling);
+        //////////////////////////////////////////////////////
+        // 完全停止
+        //////////////////////////////////////////////////////
+
+        rolling = false;
+
+        clearInterval(rollingInterval);
+
+        //////////////////////////////////////////////////////
+        // 停止音效
+        //////////////////////////////////////////////////////
 
         spinSound.pause();
 
         spinSound.currentTime = 0;
 
         //////////////////////////////////////////////////////
-        // 正式中獎
+        // 正式中獎名單
         //////////////////////////////////////////////////////
 
         let temp = [...available];
@@ -372,13 +386,17 @@ async function drawLottery(){
         }
 
         //////////////////////////////////////////////////////
-        // 顯示最終得獎
+        // 等 interval 完全停止後再顯示
         //////////////////////////////////////////////////////
 
-        renderRollingSlots(currentWinners);
+        setTimeout(()=>{
+
+            renderRollingSlots(currentWinners);
+
+        },100);
 
         //////////////////////////////////////////////////////
-        // 本輪得獎
+        // 本輪得獎者
         //////////////////////////////////////////////////////
 
         const ul =
@@ -431,7 +449,7 @@ async function drawLottery(){
         showCurrentPrize();
 
         //////////////////////////////////////////////////////
-        // 3秒後可再抽
+        // 3秒後可再次抽獎
         //////////////////////////////////////////////////////
 
         setTimeout(()=>{
