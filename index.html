@@ -3,12 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>🎰 福瑞斯特謝師感恩餐會 - 尊榮大字版</title>
+<title>🎰 福瑞斯特謝師感恩餐會 - 尊榮黑金版</title>
 <style>
     * { box-sizing: border-box; }
     body {
         margin: 0; padding: 0;
-        background: #000; color: white;
+        background: #050505; color: #e0e0e0; /* 極深背色 */
         font-family: "Microsoft JhengHei", sans-serif;
         display: flex; height: 100vh; overflow: hidden;
     }
@@ -17,116 +17,105 @@
     .left-panel {
         flex: 0 0 80%;
         display: flex; flex-direction: column; align-items: center;
-        padding: 20px; border-right: 2px solid #222;
+        padding: 20px; border-right: 2px solid #1a1a1a;
     }
 
     h1 {
-        color: gold; font-size: 45px; margin: 0 0 15px 0;
-        text-shadow: 0 0 15px rgba(255, 215, 0, 0.5); letter-spacing: 8px;
+        color: #d4af37; /* 經典金 */
+        font-size: 48px; margin: 0 0 15px 0;
+        text-shadow: 0 0 20px rgba(212, 175, 55, 0.4); 
+        letter-spacing: 10px;
     }
 
-    /* 頂部併排控制列 */
+    /* 頂部控制列 */
     .control-bar {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 15px;
-        width: 100%;
-        margin-bottom: 20px;
-        background: rgba(255, 255, 255, 0.05);
-        padding: 15px;
-        border-radius: 15px;
+        display: flex; align-items: center; justify-content: center;
+        gap: 20px; width: 100%; margin-bottom: 25px;
+        background: rgba(255, 255, 255, 0.03);
+        padding: 15px; border-radius: 15px;
+        border: 1px solid #222;
     }
 
     #nextPrizeBtn {
-        background: #0077b6; color: white; border: none; padding: 12px 25px;
-        border-radius: 10px; font-size: 18px; font-weight: bold; cursor: pointer;
-        transition: 0.2s; white-space: nowrap;
+        background: #1a4a6e; color: #fff; border: 1px solid #3498db; 
+        padding: 12px 25px; border-radius: 10px; font-size: 18px; 
+        font-weight: bold; cursor: pointer; transition: 0.2s;
     }
-    #nextPrizeBtn:hover:not(:disabled) { background: #0096c7; transform: scale(1.05); }
-    #nextPrizeBtn:disabled { background: #333; color: #666; cursor: not-allowed; }
+    #nextPrizeBtn:hover:not(:disabled) { background: #2980b9; transform: translateY(-2px); }
+    #nextPrizeBtn:disabled { background: #222; color: #555; border-color: #333; }
 
     #currentPrize {
-        color: #fff; font-size: 28px; font-weight: bold;
-        background: rgba(255, 215, 0, 0.1); padding: 10px 40px;
-        border-radius: 50px; border: 2px solid gold;
-        min-width: 380px; text-align: center;
+        color: #ffd700; font-size: 30px; font-weight: bold;
+        background: rgba(0, 0, 0, 0.6); padding: 10px 50px;
+        border-radius: 50px; border: 2px solid #d4af37;
+        min-width: 400px; text-align: center;
+        box-shadow: 0 0 15px rgba(212, 175, 55, 0.2);
     }
 
     #drawBtn {
-        padding: 12px 50px; border: none; border-radius: 10px;
-        font-size: 24px; font-weight: bold; cursor: pointer; transition: 0.2s;
-        background: linear-gradient(135deg, #ffd700, #ffaa00); color: #000;
-        white-space: nowrap;
+        padding: 12px 60px; border: none; border-radius: 10px;
+        font-size: 26px; font-weight: bold; cursor: pointer; transition: 0.2s;
+        background: linear-gradient(135deg, #d4af37, #f1c40f); color: #000;
     }
-    #drawBtn:hover:not(:disabled) { transform: scale(1.05); box-shadow: 0 0 20px rgba(255, 215, 0, 0.4); }
-    #drawBtn:disabled { background: #444; color: #777; cursor: not-allowed; }
+    #drawBtn:hover:not(:disabled) { transform: scale(1.05); box-shadow: 0 0 30px rgba(212, 175, 55, 0.5); }
+    #drawBtn:disabled { background: #333; color: #666; }
 
-    /* 拉霸機台 */
+    /* 拉霸機台容器 */
     .slot-machine-container {
-        width: 100%; padding: 25px;
-        background: #111; border-radius: 20px; border: 4px solid #333;
-        box-shadow: inset 0 0 50px #000;
+        width: 98%; padding: 25px;
+        background: #0f0f0f; border-radius: 25px; border: 5px solid #222;
+        box-shadow: inset 0 0 100px #000, 0 20px 50px rgba(0,0,0,0.8);
     }
 
     #slotMachine {
-        display: grid; 
-        grid-template-columns: repeat(5, 1fr); 
-        gap: 15px;
+        display: grid; grid-template-columns: repeat(5, 1fr); gap: 15px;
     }
 
+    /* 【優化】滾輪底色改為深色漸層 */
     .reel {
-        height: 170px; /* 增加高度配合大字體 */
-        overflow: hidden; border-radius: 10px; position: relative;
-        background: linear-gradient(to bottom, #fff 0%, #eee 50%, #fff 100%);
-        border: 3px solid #000;
+        height: 180px; overflow: hidden; border-radius: 12px; position: relative;
+        background: linear-gradient(to bottom, #1a1a1a 0%, #2a2a2a 50%, #1a1a1a 100%);
+        border: 2px solid #333;
     }
     
     .reel::after {
         content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-        background: linear-gradient(to bottom, rgba(0,0,0,0.5) 0%, transparent 35%, transparent 65%, rgba(0,0,0,0.5) 100%);
+        background: linear-gradient(to bottom, rgba(0,0,0,0.8) 0%, transparent 40%, transparent 60%, rgba(0,0,0,0.8) 100%);
         pointer-events: none; z-index: 2;
     }
 
     .reel-inner { display: flex; flex-direction: column; }
     
-    /* 普通名字滾動字體 */
+    /* 普通滾動文字：淡灰色 */
     .slot-name {
-        width: 100%; height: 170px; display: flex; align-items: center;
+        width: 100%; height: 180px; display: flex; align-items: center;
         justify-content: center; text-align: center; 
-        font-size: 36px; font-weight: 900; color: #444;
+        font-size: 38px; font-weight: 500; color: #666;
     }
 
-    /* 【重要修改】得獎者字體：放大、深藍色、去除紅色 */
+    /* 【優化】得獎者文字：亮金色、巨大字體 */
     .slot-winner-name { 
-        color: #003366; /* 深海藍，穩重且尊榮 */
-        font-size: 52px; /* 再次放大 */
+        color: #ffd700; /* 亮金色 */
+        font-size: 56px; 
         font-weight: 900;
-        text-shadow: 0 0 10px rgba(255, 255, 255, 0.8); /* 增加白色光暈增加可讀性 */
+        text-shadow: 0 0 20px rgba(255, 215, 0, 0.6), 0 0 40px rgba(255, 215, 0, 0.2);
     }
 
-    /* 右側面板 */
+    /* 右側榮譽榜 */
     .right-panel {
-        flex: 0 0 20%; background: #0a0a0a; padding: 20px; overflow-y: auto;
-        display: flex; flex-direction: column;
+        flex: 0 0 20%; background: #080808; padding: 20px; overflow-y: auto;
     }
-    
     .right-header {
         display: flex; justify-content: space-between; align-items: center;
-        border-bottom: 2px solid gold; padding-bottom: 10px; margin-bottom: 15px;
+        border-bottom: 2px solid #d4af37; padding-bottom: 10px; margin-bottom: 20px;
     }
+    .right-panel h2 { color: #d4af37; font-size: 24px; margin: 0; }
+    #resetBtn { background: #222; color: #666; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; }
+    #resetBtn:hover { background: #400; color: #fff; }
 
-    .right-panel h2 { color: gold; font-size: 22px; margin: 0; }
-    
-    #resetBtn {
-        background: #333; color: #aaa; border: none; padding: 5px 10px;
-        border-radius: 5px; cursor: pointer; font-size: 12px;
-    }
-    #resetBtn:hover { background: #600; color: white; }
-
-    .allWinner { padding: 10px 0; border-bottom: 1px solid #222; }
-    .prize-title { color: gold; font-size: 18px; font-weight: bold; }
-    .prize-names { color: #bbb; font-size: 15px; line-height: 1.4; margin-top: 5px; }
+    .allWinner { padding: 12px 0; border-bottom: 1px solid #1a1a1a; }
+    .prize-title { color: #d4af37; font-size: 19px; font-weight: bold; }
+    .prize-names { color: #aaa; font-size: 16px; line-height: 1.5; margin-top: 5px; }
 
 </style>
 </head>
@@ -136,9 +125,9 @@
         <h1>🎰 福瑞斯特謝師感恩餐會</h1>
         
         <div class="control-bar">
-            <button id="nextPrizeBtn" disabled>讀取名單...</button>
-            <div id="currentPrize">請點擊左側「鎖定」</div>
-            <button id="drawBtn" disabled>等待開獎</button>
+            <button id="nextPrizeBtn" disabled>載入中...</button>
+            <div id="currentPrize">請鎖定獎項</div>
+            <button id="drawBtn" disabled>準備開獎</button>
         </div>
 
         <div class="slot-machine-container">
@@ -149,7 +138,7 @@
     <div class="right-panel">
         <div class="right-header">
             <h2>📜 榮譽得獎榜</h2>
-            <button id="resetBtn">🔄 重置</button>
+            <button id="resetBtn">重置</button>
         </div>
         <div id="allWinnerList"></div>
     </div>
@@ -161,59 +150,39 @@
 <script>
     const API_URL = 'https://script.google.com/macros/s/AKfycbyDm_9tAXT6vwCmqkpnLfecoukALyiVIRxkY5QubO3X8EMbbqIMmHnsG7p0AZza3q8/exec';
 
-    let people = [];
-    let prizes = [];
-    let winners = [];
+    let people = []; let prizes = []; let winners = [];
     let currentPrizeIndex = -1;
-    const SLOT_HEIGHT = 170; 
+    const SLOT_HEIGHT = 180; 
     const TOTAL_FAKE_NAMES = 60; 
 
     async function init() {
         try {
             const response = await fetch(API_URL);
             const data = await response.json();
-            people = data.people;
-            prizes = data.prizes;
-            winners = data.winners;
+            people = data.people; prizes = data.prizes; winners = data.winners;
             document.getElementById("nextPrizeBtn").disabled = false;
             document.getElementById("nextPrizeBtn").innerText = "🔍 鎖定下個獎項";
             renderAllWinners();
-        } catch (e) {
-            document.getElementById("currentPrize").innerText = "❌ 連線異常";
-        }
+        } catch (e) { document.getElementById("currentPrize").innerText = "❌ 連線失敗"; }
     }
 
     function renderAllWinners() {
-        const div = document.getElementById("allWinnerList");
-        div.innerHTML = "";
+        const div = document.getElementById("allWinnerList"); div.innerHTML = "";
         let grouped = {};
-        winners.forEach(w => {
-            if (!grouped[w.prize]) grouped[w.prize] = [];
-            grouped[w.prize].push(w.name);
-        });
+        winners.forEach(w => { if (!grouped[w.prize]) grouped[w.prize] = []; grouped[w.prize].push(w.name); });
         Object.keys(grouped).forEach(prize => {
             div.innerHTML += `<div class="allWinner"><div class="prize-title">🎉 ${prize}</div><div class="prize-names">${grouped[prize].join("、")}</div></div>`;
         });
     }
 
     function prepareNextPrize() {
-        let counter = {};
-        winners.forEach(w => {
-            if (!counter[w.prize]) counter[w.prize] = 0;
-            counter[w.prize]++;
-        });
-
+        let counter = {}; winners.forEach(w => { if (!counter[w.prize]) counter[w.prize] = 0; counter[w.prize]++; });
         let found = false;
         for (let i = 0; i < prizes.length; i++) {
-            const prizeName = prizes[i]["獎項"];
-            const total = parseInt(prizes[i]["人數"]);
-            if ((counter[prizeName] || 0) < total) {
-                currentPrizeIndex = i;
-                found = true;
-                break;
+            if ((counter[prizes[i]["獎項"]] || 0) < parseInt(prizes[i]["人數"])) {
+                currentPrizeIndex = i; found = true; break;
             }
         }
-
         if (found) {
             const prize = prizes[currentPrizeIndex];
             document.getElementById("currentPrize").innerText = `🎁 ${prize["獎項"]} (${prize["人數"]}人)`;
@@ -221,76 +190,61 @@
             document.getElementById("drawBtn").innerText = "🎰 開始抽獎";
             document.getElementById("nextPrizeBtn").disabled = true;
             document.getElementById("slotMachine").innerHTML = ""; 
-        } else {
-            document.getElementById("currentPrize").innerText = "🎊 圓滿結束 🎊";
-        }
+        } else { document.getElementById("currentPrize").innerText = "🎊 圓滿結束"; }
     }
 
     function createSlot(nameList, winnerData) {
-        const reel = document.createElement("div");
-        reel.className = "reel";
-        const inner = document.createElement("div");
-        inner.className = "reel-inner";
+        const reel = document.createElement("div"); reel.className = "reel";
+        const inner = document.createElement("div"); inner.className = "reel-inner";
         for (let i = 0; i < TOTAL_FAKE_NAMES; i++) {
-            const random = nameList[Math.floor(Math.random() * nameList.length)];
-            inner.innerHTML += `<div class="slot-name">${random ? random["姓名"] : "---"}</div>`;
+            const r = nameList[Math.floor(Math.random() * nameList.length)];
+            inner.innerHTML += `<div class="slot-name">${r ? r["姓名"] : "---"}</div>`;
         }
         inner.innerHTML += `<div class="slot-name slot-winner-name">${winnerData["姓名"]}</div>`;
         for (let i = 0; i < 3; i++) {
-            const random = nameList[Math.floor(Math.random() * nameList.length)];
-            inner.innerHTML += `<div class="slot-name">${random ? random["姓名"] : "---"}</div>`;
+            const r = nameList[Math.floor(Math.random() * nameList.length)];
+            inner.innerHTML += `<div class="slot-name">${r ? r["姓名"] : "---"}</div>`;
         }
-        reel.appendChild(inner);
-        return { reel, inner };
+        reel.appendChild(inner); return { reel, inner };
     }
 
     async function drawLottery() {
         const spinSound = document.getElementById("spinSound");
         const drawBtn = document.getElementById("drawBtn");
-        drawBtn.disabled = true;
-        drawBtn.innerText = "🚀 抽獎中...";
+        drawBtn.disabled = true; drawBtn.innerText = "🚀 抽獎中...";
 
         const prize = prizes[currentPrizeIndex];
         const winnerNames = winners.map(w => w.name);
         const available = people.filter(p => !winnerNames.includes(p["姓名"]));
         const drawCount = Math.min(parseInt(prize["人數"]), available.length);
 
-        spinSound.currentTime = 0;
-        spinSound.play();
+        spinSound.currentTime = 0; spinSound.play();
 
-        let currentWinners = [];
-        let temp = [...available];
+        let currentWinners = []; let temp = [...available];
         for (let i = 0; i < drawCount; i++) {
             const idx = Math.floor(Math.random() * temp.length);
-            currentWinners.push(temp[idx]);
-            temp.splice(idx, 1);
+            currentWinners.push(temp[idx]); temp.splice(idx, 1);
         }
 
-        const machine = document.getElementById("slotMachine");
-        machine.innerHTML = "";
+        const machine = document.getElementById("slotMachine"); machine.innerHTML = "";
         let slots = [];
         for (let i = 0; i < drawCount; i++) {
             const slot = createSlot(available, currentWinners[i]);
-            machine.appendChild(slot.reel);
-            slots.push(slot);
+            machine.appendChild(slot.reel); slots.push(slot);
         }
 
         void machine.offsetWidth; 
         const targetY = -(TOTAL_FAKE_NAMES * SLOT_HEIGHT);
-
         slots.forEach(slot => {
             slot.inner.style.transition = `transform 8s cubic-bezier(0.1, 0, 0.1, 1)`;
             slot.inner.style.transform = `translateY(${targetY}px)`;
         });
 
         setTimeout(async () => {
-            spinSound.pause(); 
-            spinSound.currentTime = 0;
-
+            spinSound.pause(); spinSound.currentTime = 0;
             currentWinners.forEach(w => winners.push({ prize: prize["獎項"], name: w["姓名"] }));
             renderAllWinners();
             fetch(API_URL, { method: "POST", body: JSON.stringify({ prize: prize["獎項"], winners: currentWinners }) });
-            
             document.getElementById("nextPrizeBtn").disabled = false;
             drawBtn.innerText = "開獎完成";
         }, 8000); 
@@ -299,7 +253,7 @@
     document.getElementById("nextPrizeBtn").addEventListener("click", prepareNextPrize);
     document.getElementById("drawBtn").addEventListener("click", drawLottery);
     document.getElementById("resetBtn").addEventListener("click", async () => {
-        if(confirm("確定要重置嗎？")) {
+        if(confirm("重置所有紀錄？")) {
             await fetch(API_URL, { method: "POST", body: JSON.stringify({ action: "reset" }) });
             location.reload();
         }
