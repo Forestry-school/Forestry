@@ -25,7 +25,7 @@
         display: flex;
         flex-direction: column;
         align-items: center;
-        margin-right: 22%; /* 留給右邊面板，稍微加寬避免干擾 */
+        margin-right: 22%; /* 留給右邊面板的空間 */
         min-width: 0;
     }
 
@@ -69,34 +69,34 @@
     /* ================= 核心：擬真拉霸機台 ================= */
     .slot-machine-container {
         background: #1a1a1a;
-        padding: 25px;
+        padding: 25px 40px; /* 增加一點左右內邊距 */
         border-radius: 20px;
         border: 6px solid #333;
         box-shadow: inset 0 0 30px #000, 0 10px 40px rgba(0,0,0,0.8);
         width: 100%;
+        max-width: 800px; /* 限制整個外框的最大寬度 */
         margin-bottom: 40px;
     }
 
     #slotMachine {
-        display: flex;
-        flex-wrap: wrap;
+        /* 【終極防呆：網格排版】強迫每一排就是 5 個格子 */
+        display: grid;
+        grid-template-columns: repeat(5, max-content);
         justify-content: center;
-        gap: 10px; /* 縮小間距 */
-        /* 【絕對密碼】10個方塊(84px) + 9個間距(10px) = 930px，設定 940px 絕對安全 */
-        max-width: 940px; 
+        gap: 15px; 
         margin: 0 auto;
     }
 
     /* 單一滾輪設計 */
     .reel {
-        width: 80px;  /* 縮小寬度以適應所有螢幕 */
-        height: 80px; /* 縮小高度 */
+        width: 100px;  /* 寬高設為 100，字體更清楚 */
+        height: 100px; 
         box-sizing: content-box; 
         overflow: hidden;
-        border-radius: 8px;
+        border-radius: 10px;
         position: relative;
         background: linear-gradient(to bottom, #f9f9f9, #d9d9d9);
-        border: 2px solid #000; /* 邊框也改細一點 */
+        border: 3px solid #000;
         box-shadow: 0 0 10px rgba(0,0,0,0.5);
     }
     
@@ -116,18 +116,18 @@
 
     .slot-name {
         width: 100%;
-        height: 80px; /* 必須與 .reel 高度完全一致 */
+        height: 100px; /* 必須與 .reel 高度完全一致 */
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 22px; /* 字體稍微縮小配合方塊 */
+        font-size: 24px; 
         font-weight: 900;
         color: #111;
     }
 
     .slot-winner-name {
         color: #d10000; 
-        font-size: 28px; /* 中獎人字體稍大 */
+        font-size: 30px; 
     }
 
     /* ================= 名單區 ================= */
@@ -224,8 +224,8 @@
     let winners = [];
     let currentPrizeIndex = 0;
 
-    // ★ 同步改為 80，對應新的 CSS 尺寸，字體才會停在正中間
-    const SLOT_HEIGHT = 80; 
+    // ★ 改為 100，跟上方 CSS 滾輪的高度完全一致
+    const SLOT_HEIGHT = 100; 
     const TOTAL_FAKE_NAMES = 30; 
 
     async function init() {
