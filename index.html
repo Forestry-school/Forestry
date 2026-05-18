@@ -33,8 +33,13 @@ content="width=device-width, initial-scale=1.0">
             重置所有抽獎
         </button>
 
+        <!-- 目前獎項 -->
+        <div id="currentPrize"></div>
+
+        <!-- 拉霸 -->
         <div id="slotContainer"></div>
 
+        <!-- 本輪得獎 -->
         <h2 class="winner-title">
             🏆 本輪得獎者
         </h2>
@@ -97,6 +102,8 @@ async function init(){
     findCurrentPrize();
 
     renderAllWinners();
+
+    showCurrentPrize();
 }
 
 ////////////////////////////////////////////////////////
@@ -135,6 +142,32 @@ function findCurrentPrize(){
             break;
         }
     }
+}
+
+////////////////////////////////////////////////////////
+// 顯示目前獎項
+////////////////////////////////////////////////////////
+
+function showCurrentPrize(){
+
+    if(currentPrizeIndex >= prizes.length){
+
+        document
+        .getElementById("currentPrize")
+        .innerText =
+        "🎉 所有獎項已抽完";
+
+        return;
+    }
+
+    const prize =
+    prizes[currentPrizeIndex];
+
+    document
+    .getElementById("currentPrize")
+    .innerText =
+
+    `🎁 目前抽：${prize["獎項"]}（${prize["人數"]}人）`;
 }
 
 ////////////////////////////////////////////////////////
@@ -274,7 +307,7 @@ async function drawLottery(){
     }
 
     //////////////////////////////////////////////////////
-    // 跑動動畫
+    // 跑動名字
     //////////////////////////////////////////////////////
 
     let rolling = setInterval(()=>{
@@ -301,7 +334,7 @@ async function drawLottery(){
             rollingPeople
         );
 
-    },80);
+    },100);
 
     //////////////////////////////////////////////////////
     // 5秒後停止
@@ -314,6 +347,10 @@ async function drawLottery(){
         spinSound.pause();
 
         spinSound.currentTime = 0;
+
+        //////////////////////////////////////////////////////
+        // 正式中獎
+        //////////////////////////////////////////////////////
 
         let temp = [...available];
 
@@ -341,7 +378,7 @@ async function drawLottery(){
         renderRollingSlots(currentWinners);
 
         //////////////////////////////////////////////////////
-        // 本輪得獎者
+        // 本輪得獎
         //////////////////////////////////////////////////////
 
         const ul =
@@ -391,6 +428,12 @@ async function drawLottery(){
 
         currentPrizeIndex++;
 
+        showCurrentPrize();
+
+        //////////////////////////////////////////////////////
+        // 3秒後可再抽
+        //////////////////////////////////////////////////////
+
         setTimeout(()=>{
 
             drawBtn.disabled = false;
@@ -406,7 +449,7 @@ async function drawLottery(){
 
 async function resetLottery(){
 
-    if(!confirm("確定要重置嗎？")){
+    if(!confirm("確定要重置所有抽獎嗎？")){
 
         return;
     }
