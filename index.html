@@ -33,7 +33,7 @@ content="width=device-width, initial-scale=1.0">
             重置所有抽獎
         </button>
 
-        <!-- 目前抽的獎項 -->
+        <!-- 目前獎項 -->
         <div id="currentPrize"></div>
 
         <!-- 拉霸 -->
@@ -45,6 +45,13 @@ content="width=device-width, initial-scale=1.0">
         </h2>
 
         <ul id="winnerList"></ul>
+
+        <!-- 剩餘未中獎 -->
+        <h2 class="remain-title">
+            🎯 尚未抽中名單
+        </h2>
+
+        <div id="remainList"></div>
 
     </div>
 
@@ -102,6 +109,8 @@ async function init(){
     findCurrentPrize();
 
     renderAllWinners();
+
+    renderRemainList();
 
     showCurrentPrize();
 }
@@ -191,10 +200,6 @@ function renderAllWinners(){
 
                 <br>
 
-                ${w.unit}
-
-                -
-
                 ${w.name}
 
             </div>
@@ -214,6 +219,33 @@ function getAvailablePeople(){
     return people.filter(
         p => !winnerNames.includes(p["姓名"])
     );
+}
+
+////////////////////////////////////////////////////////
+// 顯示剩餘名單
+////////////////////////////////////////////////////////
+
+function renderRemainList(){
+
+    const remain =
+    getAvailablePeople();
+
+    const div =
+    document.getElementById("remainList");
+
+    div.innerHTML = "";
+
+    remain.forEach(person=>{
+
+        div.innerHTML += `
+
+            <div class="remain-item">
+
+                ${person["姓名"]}
+
+            </div>
+        `;
+    });
 }
 
 ////////////////////////////////////////////////////////
@@ -238,11 +270,7 @@ function renderRollingSlots(people){
 
             <div class="slot-inner">
 
-                <div class="slot-unit">
-                    ${person["單位"]}
-                </div>
-
-                <div class="slot-name">
+                <div class="slot-name only-name">
                     ${person["姓名"]}
                 </div>
 
@@ -386,7 +414,7 @@ async function drawLottery(){
         }
 
         //////////////////////////////////////////////////////
-        // 等 interval 完全停止後再顯示
+        // 顯示最終得獎
         //////////////////////////////////////////////////////
 
         setTimeout(()=>{
@@ -410,7 +438,7 @@ async function drawLottery(){
             document.createElement("li");
 
             li.innerText =
-            `${w["單位"]} - ${w["姓名"]}`;
+            `${w["姓名"]}`;
 
             ul.appendChild(li);
 
@@ -443,6 +471,8 @@ async function drawLottery(){
         //////////////////////////////////////////////////////
 
         renderAllWinners();
+
+        renderRemainList();
 
         currentPrizeIndex++;
 
