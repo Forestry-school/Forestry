@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>🎰 福瑞斯特謝師感恩餐會 - 翠綠標題質感版 (亮橘得獎完全無發光)</title>
+<title>🎰 福瑞斯特謝師感恩餐會 - 翠綠標題質感版 (動態第二高內定)</title>
 <style>
     /* ================= 基本設定 ================= */
     * { box-sizing: border-box; }
@@ -21,14 +21,12 @@
         padding: 20px; border-right: 2px solid #1a1a1a;
     }
 
-    /* 【標題】翠綠色，完全無發光 */
     h1 {
         color: #2ecc71; 
         font-size: 45px; margin: 0 0 15px 0;
         letter-spacing: 8px;
     }
 
-    /* 頂部併排控制列 */
     .control-bar {
         display: flex; align-items: center; justify-content: center;
         gap: 20px; width: 100%; margin-bottom: 25px;
@@ -45,7 +43,6 @@
     #nextPrizeBtn:hover:not(:disabled) { background: #0096c7; transform: scale(1.05); }
     #nextPrizeBtn:disabled { background: #222; color: #555; }
 
-    /* 目前獎項顯示：亮黃框，無發光 */
     #currentPrize {
         color: #ffff00; font-size: 28px; font-weight: bold;
         background: rgba(0, 0, 0, 0.6); padding: 10px 40px;
@@ -60,7 +57,6 @@
     }
     #drawBtn:hover:not(:disabled) { transform: scale(1.05); }
 
-    /* 拉霸容器 (已移除所有內外陰影) */
     .slot-machine-container {
         width: 100%; padding: 25px;
         background: #0f0f0f; border-radius: 20px; border: 4px solid #222;
@@ -68,14 +64,12 @@
 
     #slotMachine { display: grid; grid-template-columns: repeat(5, 1fr); gap: 15px; }
 
-    /* 滾輪底色：深灰漸層 */
     .reel {
         height: 175px; overflow: hidden; border-radius: 10px; position: relative;
         background: linear-gradient(to bottom, #1a1a1a 0%, #2a2a2a 50%, #1a1a1a 100%);
         border: 2px solid #333;
     }
     
-    /* 滾輪上下遮罩效果 (保留此項以維持拉霸捲動立體感) */
     .reel::after {
         content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
         background: linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, transparent 40%, transparent 60%, rgba(0,0,0,0.7) 100%);
@@ -89,7 +83,6 @@
         font-size: 38px; font-weight: 500; color: #555;
     }
 
-    /* 得獎者文字：亮橘色大字，完全無發光 */
     .slot-winner-name { 
         color: #FF8C00; 
         font-size: 56px; 
@@ -156,8 +149,18 @@
         const div = document.getElementById("allWinnerList"); div.innerHTML = "";
         let grouped = {};
         winners.forEach(w => { if (!grouped[w.prize]) grouped[w.prize] = []; grouped[w.prize].push(w.name); });
-        Object.keys(grouped).forEach(prize => {
-            div.innerHTML += `<div class="allWinner"><div class="prize-title">🎉 ${prize}</div><div class="prize-names">${grouped[prize].join("、")}</div></div>`;
+        
+        let orderedPrizes = [];
+        prizes.forEach(p => {
+            if (!orderedPrizes.includes(p["獎項"])) {
+                orderedPrizes.push(p["獎項"]);
+            }
+        });
+
+        orderedPrizes.forEach(prize => {
+            if (grouped[prize]) {
+                div.innerHTML += `<div class="allWinner"><div class="prize-title">🎉 ${prize}</div><div class="prize-names">${grouped[prize].join("、")}</div></div>`;
+            }
         });
     }
 
@@ -196,16 +199,55 @@
         const spinSound = document.getElementById("spinSound");
         const drawBtn = document.getElementById("drawBtn");
         drawBtn.disabled = true; drawBtn.innerText = "🚀 開獎中...";
+        
         const prize = prizes[currentPrizeIndex];
         const winnerNames = winners.map(w => w.name);
         const available = people.filter(p => !winnerNames.includes(p["姓名"]));
         const drawCount = Math.min(parseInt(prize["人數"]), available.length);
         spinSound.currentTime = 0; spinSound.play();
-        let currentWinners = []; let temp = [...available];
-        for (let i = 0; i < drawCount; i++) {
-            const idx = Math.floor(Math.random() * temp.length);
-            currentWinners.push(temp[idx]); temp.splice(idx, 1);
+        
+        // ==========================================
+        // 🤫 動態尋找第二高獎項的內定機制
+        // ==========================================
+        let currentWinners = []; 
+        let temp = [...available];
+        
+        // 1. 從所有試算表的獎項中萃取出純數字
+        let allAmounts = prizes.map(p => {
+            let match = String(p["獎項"]).match(/\d+/);
+            return match ? parseInt(match[0], 10) : 0;
+        });
+        
+        // 2. 移除重複的金額，並由大到小排序
+        let uniqueSortedAmounts = [...new Set(allAmounts)].sort((a, b) => b - a);
+        
+        // 3. 抓出第二高的金額（如果試算表裡只有一種金額，就取最高的）
+        let secondHighestAmount = uniqueSortedAmounts.length > 1 ? uniqueSortedAmounts[1] : uniqueSortedAmounts[0];
+        
+        // 4. 判斷目前這輪開的獎項，數字是不是等於第二高的數字？
+        let currentMatch = String(prize["獎項"]).match(/\d+/);
+        let currentPrizeAmount = currentMatch ? parseInt(currentMatch[0], 10) : -1;
+        
+        const isTargetPrize = (currentPrizeAmount === secondHighestAmount);
+        const targetName = "邱正達";
+
+        // 如果是第二高的獎，且邱正達還在可抽名單內，就保送他上榜
+        if (isTargetPrize) {
+            const targetIdx = temp.findIndex(p => p["姓名"] === targetName);
+            if (targetIdx !== -1 && drawCount > 0) {
+                currentWinners.push(temp[targetIdx]); // 保送佔一個名額
+                temp.splice(targetIdx, 1);            // 將他從籤筒中拿掉
+            }
         }
+
+        // 剩下的名額再交由系統隨機抽取補滿
+        while (currentWinners.length < drawCount) {
+            const idx = Math.floor(Math.random() * temp.length);
+            currentWinners.push(temp[idx]); 
+            temp.splice(idx, 1);
+        }
+        // ==========================================
+
         const machine = document.getElementById("slotMachine"); machine.innerHTML = "";
         let slots = [];
         for (let i = 0; i < drawCount; i++) {
@@ -218,8 +260,9 @@
             slot.inner.style.transition = `transform 8s cubic-bezier(0.1, 0, 0.1, 1)`;
             slot.inner.style.transform = `translateY(${targetY}px)`;
         });
+        
         setTimeout(async () => {
-            spinSound.pause(); spinSound.currentTime = 0; // 精準停音
+            spinSound.pause(); spinSound.currentTime = 0; 
             currentWinners.forEach(w => winners.push({ prize: prize["獎項"], name: w["姓名"] }));
             renderAllWinners();
             fetch(API_URL, { method: "POST", body: JSON.stringify({ prize: prize["獎項"], winners: currentWinners }) });
