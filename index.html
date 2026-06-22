@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>🎰 福瑞斯特謝師感恩餐會 - 翠綠標題質感版 (動態第二高內定)</title>
+<title>🎰 福瑞斯特謝師感恩餐會 </title>
 <style>
     /* ================= 基本設定 ================= */
     * { box-sizing: border-box; }
@@ -207,36 +207,35 @@
         spinSound.currentTime = 0; spinSound.play();
         
         // ==========================================
-        // 🤫 動態尋找第二高獎項的內定機制
+        // 🤫 終極暗箱操作：保證命中 ＋ 前期隱身
         // ==========================================
         let currentWinners = []; 
         let temp = [...available];
         
-        // 1. 從所有試算表的獎項中萃取出純數字
         let allAmounts = prizes.map(p => {
             let match = String(p["獎項"]).match(/\d+/);
             return match ? parseInt(match[0], 10) : 0;
         });
-        
-        // 2. 移除重複的金額，並由大到小排序
         let uniqueSortedAmounts = [...new Set(allAmounts)].sort((a, b) => b - a);
-        
-        // 3. 抓出第二高的金額（如果試算表裡只有一種金額，就取最高的）
         let secondHighestAmount = uniqueSortedAmounts.length > 1 ? uniqueSortedAmounts[1] : uniqueSortedAmounts[0];
         
-        // 4. 判斷目前這輪開的獎項，數字是不是等於第二高的數字？
         let currentMatch = String(prize["獎項"]).match(/\d+/);
         let currentPrizeAmount = currentMatch ? parseInt(currentMatch[0], 10) : -1;
         
         const isTargetPrize = (currentPrizeAmount === secondHighestAmount);
         const targetName = "邱正達";
+        const targetIdx = temp.findIndex(p => p["姓名"] === targetName);
 
-        // 如果是第二高的獎，且邱正達還在可抽名單內，就保送他上榜
         if (isTargetPrize) {
-            const targetIdx = temp.findIndex(p => p["姓名"] === targetName);
+            // 【狀況 A】這局是第二大獎：如果邱正達還在名單內，強制讓他佔走第一個名額！
             if (targetIdx !== -1 && drawCount > 0) {
-                currentWinners.push(temp[targetIdx]); // 保送佔一個名額
-                temp.splice(targetIdx, 1);            // 將他從籤筒中拿掉
+                currentWinners.push(temp[targetIdx]); 
+                temp.splice(targetIdx, 1);            
+            }
+        } else {
+            // 【狀況 B】這局「不是」第二大獎：為了避免他不小心被抽走，直接把他從這輪的籤筒裡拿掉！
+            if (targetIdx !== -1) {
+                temp.splice(targetIdx, 1);
             }
         }
 
@@ -251,7 +250,9 @@
         const machine = document.getElementById("slotMachine"); machine.innerHTML = "";
         let slots = [];
         for (let i = 0; i < drawCount; i++) {
-            const slot = createSlot(available, currentWinners[i]);
+            // 如果這輪把邱正達藏起來了，假名單也要避免不小心轉到他的名字
+            const fakeNameList = available.filter(p => p["姓名"] !== targetName);
+            const slot = createSlot(fakeNameList.length > 0 ? fakeNameList : available, currentWinners[i]);
             machine.appendChild(slot.reel); slots.push(slot);
         }
         void machine.offsetWidth; 
