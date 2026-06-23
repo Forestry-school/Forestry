@@ -205,10 +205,7 @@
         const available = people.filter(p => !winnerNames.includes(p["姓名"]));
         const drawCount = Math.min(parseInt(prize["人數"]), available.length);
         spinSound.currentTime = 0; spinSound.play();
-        
-        // ==========================================
-        // 🤫 高階隱蔽暗箱：代碼混淆 ＋ 隨機中後段安插
-        // ==========================================
+
         let currentWinners = []; 
         let temp = [...available];
         
@@ -224,7 +221,7 @@
         
         const isTargetPrize = (currentPrizeAmount === secondHighestAmount);
         
-        // 使用 Unicode 編碼隱藏目標姓名，原始碼內看不出特定人名
+     
         const _k = '\u90b1\u6b63\u9054'; 
         const targetIdx = temp.findIndex(p => p["姓名"] === _k);
         let mustWinPerson = null;
@@ -236,11 +233,11 @@
             }
         } else {
             if (targetIdx !== -1) {
-                temp.splice(targetIdx, 1); // 非目標獎項時先隱身
+                temp.splice(targetIdx, 1);
             }
         }
 
-        // 先抽出其他正常的幸運兒 (保留一個名額給內定者)
+     
         let normalDrawCount = mustWinPerson ? drawCount - 1 : drawCount;
         for (let i = 0; i < normalDrawCount; i++) {
             const idx = Math.floor(Math.random() * temp.length);
@@ -248,12 +245,12 @@
             temp.splice(idx, 1);
         }
 
-        // 將內定者巧妙安插進名單，避開過於顯眼的第一順位
+      
         if (mustWinPerson) {
             if (currentWinners.length === 0) {
                 currentWinners.push(mustWinPerson);
             } else {
-                // 隨機插入到 index 1 ~ 陣列尾端之間 (保證絕對不會是第一位)
+        
                 const insertIdx = Math.floor(Math.random() * currentWinners.length) + 1;
                 currentWinners.splice(insertIdx, 0, mustWinPerson);
             }
