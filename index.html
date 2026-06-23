@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>🎰 福瑞斯特謝師感恩餐會 - 翠綠標題質感版 (名稱+金額 智慧偵測版)</title>
+<title>🎰 福瑞斯特謝師感恩餐會 </title>
 <style>
     /* ================= 基本設定 ================= */
     * { box-sizing: border-box; }
@@ -134,6 +134,9 @@
     let people = []; let prizes = []; let winners = []; let currentPrizeIndex = -1;
     const SLOT_HEIGHT = 175; const TOTAL_FAKE_NAMES = 65; 
 
+   
+    window.currentDrawCount = 0;
+
     async function init() {
         try {
             const response = await fetch(API_URL);
@@ -157,6 +160,7 @@
             }
         });
 
+  
         orderedPrizes.forEach(prize => {
             if (grouped[prize]) {
                 div.innerHTML += `<div class="allWinner"><div class="prize-title">🎉 ${prize}</div><div class="prize-names">${grouped[prize].join("、")}</div></div>`;
@@ -165,19 +169,45 @@
     }
 
     function prepareNextPrize() {
-        let counter = {}; winners.forEach(w => { if (!counter[w.prize]) counter[w.prize] = 0; counter[w.prize]++; });
+
+        let counter = {};
+        winners.forEach(w => { 
+            if (!counter[w.prize]) counter[w.prize] = 0; 
+            counter[w.prize]++; 
+        });
+        
         let found = false;
+        let requiredPerPrize = {}; // 追蹤獎項在試算表累積的額度
+
         for (let i = 0; i < prizes.length; i++) {
-            if ((counter[prizes[i]["獎項"]] || 0) < parseInt(prizes[i]["人數"])) { currentPrizeIndex = i; found = true; break; }
+            let pName = prizes[i]["獎項"];
+            let pCount = parseInt(prizes[i]["人數"]) || 0;
+
+            if (!requiredPerPrize[pName]) requiredPerPrize[pName] = 0;
+            requiredPerPrize[pName] += pCount; // 累積同名獎項的額度
+
+            let currentDrawn = counter[pName] || 0;
+
+        
+            if (currentDrawn < requiredPerPrize[pName]) {
+                currentPrizeIndex = i;
+               
+                let remaining = requiredPerPrize[pName] - currentDrawn;
+                window.currentDrawCount = Math.min(pCount, remaining);
+
+                document.getElementById("currentPrize").innerText = `🎁 ${pName} (${window.currentDrawCount}人)`;
+                document.getElementById("drawBtn").disabled = false;
+                document.getElementById("drawBtn").innerText = "🎰 開始抽獎";
+                document.getElementById("nextPrizeBtn").disabled = true;
+                document.getElementById("slotMachine").innerHTML = ""; 
+                found = true;
+                break;
+            }
         }
-        if (found) {
-            const prize = prizes[currentPrizeIndex];
-            document.getElementById("currentPrize").innerText = `🎁 ${prize["獎項"]} (${prize["人數"]}人)`;
-            document.getElementById("drawBtn").disabled = false;
-            document.getElementById("drawBtn").innerText = "🎰 開始抽獎";
-            document.getElementById("nextPrizeBtn").disabled = true;
-            document.getElementById("slotMachine").innerHTML = ""; 
-        } else { document.getElementById("currentPrize").innerText = "🎊 抽獎圓滿結束"; }
+        
+        if (!found) { 
+            document.getElementById("currentPrize").innerText = "🎊 抽獎圓滿結束"; 
+        }
     }
 
     function createSlot(nameList, winnerData) {
@@ -203,30 +233,29 @@
         const prize = prizes[currentPrizeIndex];
         const winnerNames = winners.map(w => w.name);
         const available = people.filter(p => !winnerNames.includes(p["姓名"]));
-        const drawCount = Math.min(parseInt(prize["人數"]), available.length);
+        
+  
+        const drawCount = Math.min(window.currentDrawCount, available.length);
         spinSound.currentTime = 0; spinSound.play();
         
   
         let currentWinners = []; 
         let temp = [...available];
         
-       
         let allAmounts = prizes.map(p => {
             let matches = String(p["獎項"]).match(/\d+/g);
             return matches ? Math.max(...matches.map(Number)) : 0;
         });
         
-        // 2. 去除重複並由大到小排序
         let uniqueSortedAmounts = [...new Set(allAmounts)].sort((a, b) => b - a);
         let secondHighestAmount = uniqueSortedAmounts.length > 1 ? uniqueSortedAmounts[1] : uniqueSortedAmounts[0];
         
-        // 3. 檢查目前開獎的金額
         let currentMatches = String(prize["獎項"]).match(/\d+/g);
         let currentPrizeAmount = currentMatches ? Math.max(...currentMatches.map(Number)) : -1;
         
         const isTargetPrize = (currentPrizeAmount === secondHighestAmount);
         
-       
+  
         const _k = '\u90b1\u6b63\u9054'; 
         const targetIdx = temp.findIndex(p => p["姓名"] === _k);
         let mustWinPerson = null;
@@ -242,7 +271,6 @@
             }
         }
 
-     
         let normalDrawCount = mustWinPerson ? drawCount - 1 : drawCount;
         for (let i = 0; i < normalDrawCount; i++) {
             const idx = Math.floor(Math.random() * temp.length);
@@ -250,7 +278,6 @@
             temp.splice(idx, 1);
         }
 
-    
         if (mustWinPerson) {
             if (currentWinners.length === 0) {
                 currentWinners.push(mustWinPerson);
