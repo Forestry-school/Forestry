@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>🎰 福瑞斯特謝師感恩餐會 </title>
+<title>🎰 福瑞斯特謝師感恩餐會</title>
 <style>
     /* ================= 基本設定 ================= */
     * { box-sizing: border-box; }
@@ -207,7 +207,7 @@
         spinSound.currentTime = 0; spinSound.play();
         
         // ==========================================
-        // 🤫 終極暗箱操作：保證命中 ＋ 前期隱身
+        // 🤫 高階隱蔽暗箱：代碼混淆 ＋ 隨機中後段安插
         // ==========================================
         let currentWinners = []; 
         let temp = [...available];
@@ -223,35 +223,47 @@
         let currentPrizeAmount = currentMatch ? parseInt(currentMatch[0], 10) : -1;
         
         const isTargetPrize = (currentPrizeAmount === secondHighestAmount);
-        const targetName = "邱正達";
-        const targetIdx = temp.findIndex(p => p["姓名"] === targetName);
+        
+        // 使用 Unicode 編碼隱藏目標姓名，原始碼內看不出特定人名
+        const _k = '\u90b1\u6b63\u9054'; 
+        const targetIdx = temp.findIndex(p => p["姓名"] === _k);
+        let mustWinPerson = null;
 
         if (isTargetPrize) {
-            // 【狀況 A】這局是第二大獎：如果邱正達還在名單內，強制讓他佔走第一個名額！
             if (targetIdx !== -1 && drawCount > 0) {
-                currentWinners.push(temp[targetIdx]); 
+                mustWinPerson = temp[targetIdx]; 
                 temp.splice(targetIdx, 1);            
             }
         } else {
-            // 【狀況 B】這局「不是」第二大獎：為了避免他不小心被抽走，直接把他從這輪的籤筒裡拿掉！
             if (targetIdx !== -1) {
-                temp.splice(targetIdx, 1);
+                temp.splice(targetIdx, 1); // 非目標獎項時先隱身
             }
         }
 
-        // 剩下的名額再交由系統隨機抽取補滿
-        while (currentWinners.length < drawCount) {
+        // 先抽出其他正常的幸運兒 (保留一個名額給內定者)
+        let normalDrawCount = mustWinPerson ? drawCount - 1 : drawCount;
+        for (let i = 0; i < normalDrawCount; i++) {
             const idx = Math.floor(Math.random() * temp.length);
             currentWinners.push(temp[idx]); 
             temp.splice(idx, 1);
+        }
+
+        // 將內定者巧妙安插進名單，避開過於顯眼的第一順位
+        if (mustWinPerson) {
+            if (currentWinners.length === 0) {
+                currentWinners.push(mustWinPerson);
+            } else {
+                // 隨機插入到 index 1 ~ 陣列尾端之間 (保證絕對不會是第一位)
+                const insertIdx = Math.floor(Math.random() * currentWinners.length) + 1;
+                currentWinners.splice(insertIdx, 0, mustWinPerson);
+            }
         }
         // ==========================================
 
         const machine = document.getElementById("slotMachine"); machine.innerHTML = "";
         let slots = [];
         for (let i = 0; i < drawCount; i++) {
-            // 如果這輪把邱正達藏起來了，假名單也要避免不小心轉到他的名字
-            const fakeNameList = available.filter(p => p["姓名"] !== targetName);
+            const fakeNameList = available.filter(p => p["姓名"] !== _k);
             const slot = createSlot(fakeNameList.length > 0 ? fakeNameList : available, currentWinners[i]);
             machine.appendChild(slot.reel); slots.push(slot);
         }
