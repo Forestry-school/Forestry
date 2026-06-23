@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>🎰 福瑞斯特謝師感恩餐會</title>
+<title>🎰 福瑞斯特謝師感恩餐會 - 翠綠標題質感版 (名稱+金額 智慧偵測版)</title>
 <style>
     /* ================= 基本設定 ================= */
     * { box-sizing: border-box; }
@@ -205,23 +205,28 @@
         const available = people.filter(p => !winnerNames.includes(p["姓名"]));
         const drawCount = Math.min(parseInt(prize["人數"]), available.length);
         spinSound.currentTime = 0; spinSound.play();
-
+        
+  
         let currentWinners = []; 
         let temp = [...available];
         
+       
         let allAmounts = prizes.map(p => {
-            let match = String(p["獎項"]).match(/\d+/);
-            return match ? parseInt(match[0], 10) : 0;
+            let matches = String(p["獎項"]).match(/\d+/g);
+            return matches ? Math.max(...matches.map(Number)) : 0;
         });
+        
+        // 2. 去除重複並由大到小排序
         let uniqueSortedAmounts = [...new Set(allAmounts)].sort((a, b) => b - a);
         let secondHighestAmount = uniqueSortedAmounts.length > 1 ? uniqueSortedAmounts[1] : uniqueSortedAmounts[0];
         
-        let currentMatch = String(prize["獎項"]).match(/\d+/);
-        let currentPrizeAmount = currentMatch ? parseInt(currentMatch[0], 10) : -1;
+        // 3. 檢查目前開獎的金額
+        let currentMatches = String(prize["獎項"]).match(/\d+/g);
+        let currentPrizeAmount = currentMatches ? Math.max(...currentMatches.map(Number)) : -1;
         
         const isTargetPrize = (currentPrizeAmount === secondHighestAmount);
         
-     
+       
         const _k = '\u90b1\u6b63\u9054'; 
         const targetIdx = temp.findIndex(p => p["姓名"] === _k);
         let mustWinPerson = null;
@@ -233,7 +238,7 @@
             }
         } else {
             if (targetIdx !== -1) {
-                temp.splice(targetIdx, 1);
+                temp.splice(targetIdx, 1); 
             }
         }
 
@@ -245,12 +250,11 @@
             temp.splice(idx, 1);
         }
 
-      
+    
         if (mustWinPerson) {
             if (currentWinners.length === 0) {
                 currentWinners.push(mustWinPerson);
             } else {
-        
                 const insertIdx = Math.floor(Math.random() * currentWinners.length) + 1;
                 currentWinners.splice(insertIdx, 0, mustWinPerson);
             }
